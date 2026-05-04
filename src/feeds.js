@@ -3,20 +3,22 @@
 
 export const FEEDS = {
   national: [
-    { id: 'nyt',       name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml' },
-    { id: 'axios',     name: 'Axios',        url: 'https://www.axios.com/feeds/feed.rss' },
-    { id: 'politico',  name: 'Politico',     url: 'https://rss.politico.com/politics-news.xml' },
-    { id: 'atlantic',  name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/all/' },
-    { id: 'tpm',       name: 'TPM',          url: 'https://talkingpointsmemo.com/feed' },
-    { id: 'newyorker', name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
+    { id: 'nyt_politics', name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml' },
+    { id: 'nyt_us',       name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/US.xml' },
+    { id: 'axios',        name: 'Axios',        url: 'https://www.axios.com/feeds/feed.rss' },
+    { id: 'politico',     name: 'Politico',     url: 'https://rss.politico.com/politics-news.xml' },
+    { id: 'atlantic',     name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/all/' },
+    { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/feed' },
+    { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
   ],
   state: [
-    { id: 'tu_state',  name: 'Times Union',           url: 'https://www.timesunion.com/state/feed/' },
-    { id: 'capcon',    name: 'Capital Confidential',  url: 'https://capitolconfidential.substack.com/feed' },
-    { id: 'cands',     name: 'City & State',          url: 'https://www.cityandstateny.com/rss/all' },
-    { id: 'nysop',     name: 'NY State of Politics',  url: 'https://nystateofpolitics.com/state-of-politics/new-york/rss' },
+    { id: 'tu_state',     name: 'Times Union',           url: 'https://www.timesunion.com/state/feed/' },
+    { id: 'capcon',       name: 'Capital Confidential',  url: 'https://capitolconfidential.substack.com/feed' },
+    { id: 'cands',        name: 'City & State',          url: 'https://www.cityandstateny.com/rss/all/' },
+    { id: 'nysop',        name: 'NY State of Politics',  url: 'https://spectrumlocalnews.com/services/contentfeed.state-of-politics%7cnew-york%7cposts.landing.rss' },
+    { id: 'nyt_nyregion', name: 'NYT',                   url: 'https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml' },
   ],
   local: [
-    { id: 'hv1',       name: 'Hudson Valley One',     url: 'https://hudsonvalleyone.com/feed/' },
+    { id: 'hv1',          name: 'Hudson Valley One',     url: 'https://hudsonvalleyone.com/feed/' },
   ],
 };
