@@ -4,14 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "build": "node scripts/build-feeds.js",
     "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "fast-xml-parser": "^4.5.0"
-  },
-  "devDependencies": {
-    "wrangler": "^3.90.0"
   }
 }

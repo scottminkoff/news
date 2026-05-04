@@ -6,7 +6,7 @@ async function loadTier(tier) {
   container.innerHTML = '<div class="loading">Loading…</div>';
 
   try {
-    const res = await fetch(`/api/${tier}`, { cache: 'no-store' });
+    const res = await fetch(`./data/${tier}.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
