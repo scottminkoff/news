@@ -1,0 +1,63 @@
+name: Build and deploy feeds
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Build feed JSON
+        run: node scripts/build-feeds.js
+        env:
+          FEED_URL_NYT:       ${{ secrets.FEED_URL_NYT }}
+          FEED_URL_AXIOS:     ${{ secrets.FEED_URL_AXIOS }}
+          FEED_URL_POLITICO:  ${{ secrets.FEED_URL_POLITICO }}
+          FEED_URL_ATLANTIC:  ${{ secrets.FEED_URL_ATLANTIC }}
+          FEED_URL_TPM:       ${{ secrets.FEED_URL_TPM }}
+          FEED_URL_NEWYORKER: ${{ secrets.FEED_URL_NEWYORKER }}
+          FEED_URL_TU_STATE:  ${{ secrets.FEED_URL_TU_STATE }}
+          FEED_URL_CAPCON:    ${{ secrets.FEED_URL_CAPCON }}
+          FEED_URL_CANDS:     ${{ secrets.FEED_URL_CANDS }}
+          FEED_URL_NYSOP:     ${{ secrets.FEED_URL_NYSOP }}
+          FEED_URL_HV1:       ${{ secrets.FEED_URL_HV1 }}
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
