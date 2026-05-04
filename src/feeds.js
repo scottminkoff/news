@@ -12,7 +12,7 @@ export const FEEDS = {
   ],
   state: [
     { id: 'tu_state',  name: 'Times Union',           url: 'https://www.timesunion.com/state/feed/' },
-    { id: 'capcon',    name: 'Capital Confidential',  url: 'https://www.timesunion.com/capitol/feed/' },
+    { id: 'capcon',    name: 'Capital Confidential',  url: 'https://capitolconfidential.substack.com/feed' },
     { id: 'cands',     name: 'City & State',          url: 'https://www.cityandstateny.com/rss/all' },
     { id: 'nysop',     name: 'NY State of Politics',  url: 'https://nystateofpolitics.com/state-of-politics/new-york/rss' },
   ],
