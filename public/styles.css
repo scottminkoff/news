@@ -87,6 +87,24 @@ select:focus { outline: 2px solid var(--border-strong); outline-offset: 1px; }
 }
 #refresh:hover { color: var(--text); }
 
+input[type="search"] {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  width: 180px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+input[type="search"]::placeholder { color: var(--text-faint); }
+input[type="search"]:focus {
+  outline: none;
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+
 .tier.hidden { display: none; }
 
 main {
@@ -174,6 +192,23 @@ main {
 
 .card.no-image {
   grid-template-columns: 1fr;
+}
+
+.card.visited { opacity: 0.55; }
+.card.visited:hover { opacity: 1; }
+
+.feed-divider {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  font-weight: 500;
+  padding: 0.5rem 0 0;
+  margin-top: 0.25rem;
+}
+.feed-divider:first-child {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .card .thumb {

@@ -1,12 +1,34 @@
 const TIERS = ['national', 'state', 'local'];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
+const VISITED_KEY = 'news.visited';
+const VISITED_LIMIT = 1000;
 
 const state = {
   tiers: {},
   filter: localStorage.getItem(FILTER_KEY) || '',
   timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
+  search: '',
+  visited: loadVisited(),
 };
+
+function loadVisited() {
+  try {
+    const raw = localStorage.getItem(VISITED_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function markVisited(link) {
+  if (state.visited.has(link)) return;
+  state.visited.add(link);
+  if (state.visited.size > VISITED_LIMIT) {
+    state.visited = new Set([...state.visited].slice(-VISITED_LIMIT));
+  }
+  localStorage.setItem(VISITED_KEY, JSON.stringify([...state.visited]));
+}
 
 async function loadTier(tier) {
   try {
@@ -33,7 +55,7 @@ function renderTier(tier) {
   }
 
   const items = filterItems(data.items);
-  const filtersActive = state.filter || state.timeFilter;
+  const filtersActive = state.filter || state.timeFilter || state.search;
 
   if (filtersActive && items.length === 0) {
     section.classList.add('hidden');
@@ -45,7 +67,15 @@ function renderTier(tier) {
     container.innerHTML = '<div class="empty">No items.</div>';
   } else {
     const frag = document.createDocumentFragment();
-    for (const item of items) frag.appendChild(renderCard(item));
+    let lastBucket = null;
+    for (const item of items) {
+      const bucket = bucketOf(item.pubDate);
+      if (bucket !== lastBucket) {
+        frag.appendChild(renderDivider(BUCKET_LABELS[bucket]));
+        lastBucket = bucket;
+      }
+      frag.appendChild(renderCard(item));
+    }
     container.appendChild(frag);
   }
 
@@ -64,6 +94,7 @@ function filterItems(items) {
   const cutoff = state.timeFilter
     ? Date.now() - parseInt(state.timeFilter, 10) * 1000
     : null;
+  const q = state.search.trim().toLowerCase();
   return items.filter(item => {
     if (state.filter && item.source !== state.filter) return false;
     if (cutoff !== null) {
@@ -71,16 +102,52 @@ function filterItems(items) {
       const t = new Date(item.pubDate).getTime();
       if (!Number.isFinite(t) || t < cutoff) return false;
     }
+    if (q) {
+      const hay = `${item.title} ${item.description || ''} ${item.source}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
     return true;
   });
 }
 
+const BUCKET_LABELS = {
+  today: 'Today',
+  yesterday: 'Yesterday',
+  week: 'Earlier this week',
+  older: 'Older',
+  undated: 'Undated',
+};
+
+function bucketOf(pubDate) {
+  if (!pubDate) return 'undated';
+  const d = new Date(pubDate);
+  if (!Number.isFinite(d.getTime())) return 'undated';
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const t = d.getTime();
+  if (t >= today) return 'today';
+  if (t >= today - 86_400_000) return 'yesterday';
+  if (t >= today - 7 * 86_400_000) return 'week';
+  return 'older';
+}
+
+function renderDivider(label) {
+  const el = document.createElement('div');
+  el.className = 'feed-divider';
+  el.textContent = label;
+  return el;
+}
+
 function renderCard(item) {
   const a = document.createElement('a');
-  a.className = 'card' + (item.image ? '' : ' no-image');
+  a.className = 'card' + (item.image ? '' : ' no-image') + (state.visited.has(item.link) ? ' visited' : '');
   a.href = item.link;
   a.target = '_blank';
   a.rel = 'noopener noreferrer';
+  a.addEventListener('click', () => {
+    markVisited(item.link);
+    a.classList.add('visited');
+  });
 
   const ago = item.pubDate ? timeAgo(new Date(item.pubDate)) : '';
   const imgHtml = item.image
@@ -169,6 +236,7 @@ async function loadAll() {
 }
 
 document.getElementById('refresh').addEventListener('click', loadAll);
+
 document.getElementById('source-filter').addEventListener('change', e => {
   state.filter = e.target.value;
   if (state.filter) localStorage.setItem(FILTER_KEY, state.filter);
@@ -183,6 +251,17 @@ timeFilterEl.addEventListener('change', e => {
   if (state.timeFilter) localStorage.setItem(TIME_FILTER_KEY, state.timeFilter);
   else localStorage.removeItem(TIME_FILTER_KEY);
   applyFilter();
+});
+
+const searchEl = document.getElementById('search');
+let searchTimer = null;
+searchEl.addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  const v = e.target.value;
+  searchTimer = setTimeout(() => {
+    state.search = v;
+    applyFilter();
+  }, 120);
 });
 
 loadAll();
