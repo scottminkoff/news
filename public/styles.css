@@ -109,7 +109,7 @@ main {
 }
 
 .tier h2 {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-dim);
