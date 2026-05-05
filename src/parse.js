@@ -55,7 +55,7 @@ export function normalize(item, feed) {
   return {
     source: feed.name,
     sourceId: feed.id,
-    title: cleanText(title),
+    title: stripSourceSuffix(cleanText(title), feed.name),
     link,
     pubDate,
     description,
@@ -104,4 +104,9 @@ function stripHtml(s) {
 
 function cleanText(s) {
   return decodeEntities(String(s)).replace(/\s+/g, ' ').trim();
+}
+
+function stripSourceSuffix(title, sourceName) {
+  const suffix = ` - ${sourceName}`;
+  return title.endsWith(suffix) ? title.slice(0, -suffix.length).trimEnd() : title;
 }
