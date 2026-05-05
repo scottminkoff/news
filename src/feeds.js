@@ -12,7 +12,7 @@ export const FEEDS = {
     { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
   ],
   state: [
-    { id: 'tu_state',     name: 'Times Union',           url: 'https://news.google.com/rss/search?q=site%3Atimesunion.com+%28Assembly+OR+Senate+OR+Legislature+OR+Governor+OR+%22New+York+Government%22%29&hl=en-US&gl=US&ceid=US%3Aen' },
+    { id: 'tu_state',     name: 'Times Union',           url: 'https://news.google.com/rss/search?q=site%3Atimesunion.com+%28Assembly+OR+%22State+Senate%22+OR+Legislature+OR+Governor+OR+%22New+York+Government%22%29&hl=en-US&gl=US&ceid=US%3Aen' },
     { id: 'capcon',       name: 'Capital Confidential',  url: 'https://capitolconfidential.substack.com/feed' },
     { id: 'cands',        name: 'City & State',          url: 'https://www.cityandstateny.com/rss/all/' },
     { id: 'nysop',        name: 'NY State of Politics',  url: 'https://spectrumlocalnews.com/services/contentfeed.state-of-politics%7cnew-york%7cposts.landing.rss' },
