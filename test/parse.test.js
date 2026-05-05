@@ -184,6 +184,52 @@ test('Title trailing " - <source>" suffix is stripped (Google News bridge)', () 
   assert.equal(items[0].title, 'Big story breaks today');
 });
 
+test('Google News-style description with escaped HTML is cleaned, not shown raw', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Epstein survivors testify at NY Capitol - Times Union</title>
+          <link>https://news.google.com/articles/abc</link>
+          <description>&lt;a href="https://news.google.com/rss/articles/CBMxxx"&gt;Epstein survivors testify at NY Capitol&lt;/a&gt;&amp;nbsp;&amp;nbsp;Times Union</description>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'tu_state', name: 'Times Union' });
+  assert.equal(items[0].title, 'Epstein survivors testify at NY Capitol');
+  assert.equal(items[0].description, '');
+});
+
+test('Description identical to title is suppressed', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Same headline</title>
+          <link>https://example.com/dup</link>
+          <description>Same headline</description>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.equal(items[0].description, '');
+});
+
+test('Real article description is preserved', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Headline</title>
+          <link>https://example.com/real</link>
+          <description>This is a longer summary that explains the article in more detail than the headline does.</description>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.match(items[0].description, /longer summary/);
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);
