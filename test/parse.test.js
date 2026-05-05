@@ -230,6 +230,21 @@ test('Real article description is preserved', () => {
   assert.match(items[0].description, /longer summary/);
 });
 
+test('Index/archive pages with " - Page N" titles are filtered out', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item><title>Real article headline</title><link>https://example.com/a</link></item>
+        <item><title>New York - Page 5</title><link>https://example.com/p5</link></item>
+        <item><title>New York Government - Page 3</title><link>https://example.com/p3</link></item>
+        <item><title>Another real story</title><link>https://example.com/b</link></item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.equal(items.length, 2);
+  assert.deepEqual(items.map(i => i.title), ['Real article headline', 'Another real story']);
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);
