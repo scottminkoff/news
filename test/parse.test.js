@@ -170,6 +170,20 @@ test('Feed with many entities does not throw expansion-limit error', () => {
   assert.match(parsed[0].title, /Item ’0’ with & — “quotes”/);
 });
 
+test('Title trailing " - <source>" suffix is stripped (Google News bridge)', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Big story breaks today - Times Union</title>
+          <link>https://news.google.com/articles/abc</link>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'tu_state', name: 'Times Union' });
+  assert.equal(items[0].title, 'Big story breaks today');
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);
