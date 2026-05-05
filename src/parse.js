@@ -37,7 +37,14 @@ export function parseFeed(xml, feed) {
   const atom = data?.feed;
   const rawItems = channel?.item ?? atom?.entry ?? [];
   const arr = Array.isArray(rawItems) ? rawItems : [rawItems];
-  return arr.map(item => normalize(item, feed)).filter(i => i.title && i.link);
+  return arr
+    .map(item => normalize(item, feed))
+    .filter(i => i.title && i.link)
+    .filter(i => !isJunkTitle(i.title));
+}
+
+function isJunkTitle(title) {
+  return / - Page \d+$/i.test(title);
 }
 
 export function normalize(item, feed) {
