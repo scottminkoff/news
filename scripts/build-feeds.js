@@ -15,8 +15,13 @@ async function fetchFeed(feed) {
   const timer = setTimeout(() => ac.abort(), FETCH_TIMEOUT_MS);
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'NewsAggregator/1.0 (+https://github.com/scottminkoff/news)' },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'application/rss+xml, application/atom+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
       signal: ac.signal,
+      redirect: 'follow',
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const xml = await res.text();
@@ -33,8 +38,10 @@ async function buildTier(tier, feeds) {
   settled.forEach((r, i) => {
     const feed = feeds[i];
     if (r.status === 'fulfilled') {
-      sources.push({ id: feed.id, name: feed.name, ok: true, count: r.value.length });
+      const count = r.value.length;
+      sources.push({ id: feed.id, name: feed.name, ok: count > 0, count, ...(count === 0 ? { error: 'no items parsed' } : {}) });
       items.push(...r.value);
+      if (count === 0) console.error(`[${tier}] ${feed.id}: 0 items parsed`);
     } else {
       const err = String(r.reason).slice(0, 200);
       sources.push({ id: feed.id, name: feed.name, ok: false, error: err });
