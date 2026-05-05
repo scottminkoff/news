@@ -1,9 +1,11 @@
 const TIERS = ['national', 'state', 'local'];
 const FILTER_KEY = 'news.sourceFilter';
+const TIME_FILTER_KEY = 'news.timeFilter';
 
 const state = {
   tiers: {},
   filter: localStorage.getItem(FILTER_KEY) || '',
+  timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
 };
 
 async function loadTier(tier) {
@@ -30,11 +32,10 @@ function renderTier(tier) {
     return;
   }
 
-  const items = state.filter
-    ? data.items.filter(i => i.source === state.filter)
-    : data.items;
+  const items = filterItems(data.items);
+  const filtersActive = state.filter || state.timeFilter;
 
-  if (state.filter && items.length === 0) {
+  if (filtersActive && items.length === 0) {
     section.classList.add('hidden');
     return;
   }
@@ -48,7 +49,7 @@ function renderTier(tier) {
     container.appendChild(frag);
   }
 
-  if (!state.filter) {
+  if (!filtersActive) {
     const failed = (data.sources || []).filter(s => !s.ok);
     if (failed.length) {
       const status = document.createElement('div');
@@ -57,6 +58,21 @@ function renderTier(tier) {
       container.appendChild(status);
     }
   }
+}
+
+function filterItems(items) {
+  const cutoff = state.timeFilter
+    ? Date.now() - parseInt(state.timeFilter, 10) * 1000
+    : null;
+  return items.filter(item => {
+    if (state.filter && item.source !== state.filter) return false;
+    if (cutoff !== null) {
+      if (!item.pubDate) return false;
+      const t = new Date(item.pubDate).getTime();
+      if (!Number.isFinite(t) || t < cutoff) return false;
+    }
+    return true;
+  });
 }
 
 function renderCard(item) {
@@ -157,6 +173,15 @@ document.getElementById('source-filter').addEventListener('change', e => {
   state.filter = e.target.value;
   if (state.filter) localStorage.setItem(FILTER_KEY, state.filter);
   else localStorage.removeItem(FILTER_KEY);
+  applyFilter();
+});
+
+const timeFilterEl = document.getElementById('time-filter');
+timeFilterEl.value = state.timeFilter;
+timeFilterEl.addEventListener('change', e => {
+  state.timeFilter = e.target.value;
+  if (state.timeFilter) localStorage.setItem(TIME_FILTER_KEY, state.timeFilter);
+  else localStorage.removeItem(TIME_FILTER_KEY);
   applyFilter();
 });
 
