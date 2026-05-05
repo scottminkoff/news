@@ -79,6 +79,14 @@ button:disabled { opacity: 0.5; cursor: wait; }
 select { padding-right: 0.7rem; }
 select:focus { outline: 2px solid var(--border-strong); outline-offset: 1px; }
 
+#refresh {
+  padding: 0.35rem 0.55rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-dim);
+}
+#refresh:hover { color: var(--text); }
+
 .tier.hidden { display: none; }
 
 main {
