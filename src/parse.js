@@ -6,7 +6,30 @@ const parser = new XMLParser({
   textNodeName: '#text',
   parseTagValue: false,
   trimValues: true,
+  processEntities: false,
 });
+
+const NAMED_ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+  ldquo: '“', rdquo: '”', lsquo: '‘', rsquo: '’',
+  hellip: '…', mdash: '—', ndash: '–',
+  copy: '©', reg: '®', trade: '™',
+};
+
+function decodeEntities(s) {
+  return String(s).replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z][a-z0-9]*);/gi, (m, e) => {
+    if (e[0] === '#') {
+      const code = e[1] === 'x' || e[1] === 'X'
+        ? parseInt(e.slice(2), 16)
+        : parseInt(e.slice(1), 10);
+      if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
+        try { return String.fromCodePoint(code); } catch { return m; }
+      }
+      return m;
+    }
+    return NAMED_ENTITIES[e.toLowerCase()] ?? m;
+  });
+}
 
 export function parseFeed(xml, feed) {
   const data = parser.parse(xml);
@@ -75,9 +98,10 @@ function extractImage(item) {
 }
 
 function stripHtml(s) {
-  return String(s).replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  const noTags = String(s).replace(/<[^>]+>/g, ' ');
+  return decodeEntities(noTags).replace(/\s+/g, ' ').trim();
 }
 
 function cleanText(s) {
-  return String(s).replace(/\s+/g, ' ').trim();
+  return decodeEntities(String(s)).replace(/\s+/g, ' ').trim();
 }

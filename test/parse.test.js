@@ -141,6 +141,35 @@ test('Description is truncated to 280 chars', () => {
   assert.equal(items[0].description.length, 280);
 });
 
+test('Numeric and named HTML entities are decoded in title and description', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Sheriff&#8217;s Office &amp; K-9 Unit</title>
+          <link>https://example.com/ent</link>
+          <description>Q&amp;A &mdash; &ldquo;quoted&rdquo;&hellip;</description>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.equal(items[0].title, 'Sheriff’s Office & K-9 Unit');
+  assert.equal(items[0].description, 'Q&A — “quoted”…');
+});
+
+test('Feed with many entities does not throw expansion-limit error', () => {
+  const items = Array.from({ length: 60 }, (_, i) => `
+    <item>
+      <title>Item &#8217;${i}&#8217; with &amp; &#x2014; &#8220;quotes&#8221; &amp; more &amp; more &amp; more &amp; more &amp; more</title>
+      <link>https://example.com/${i}</link>
+      <description>Body &amp; ${i} &mdash; &#8217;text&#8217; &amp; entities &amp; more &amp; more &amp; more</description>
+    </item>`).join('');
+  const xml = `<?xml version="1.0"?><rss version="2.0"><channel>${items}</channel></rss>`;
+  const parsed = parseFeed(xml, FEED);
+  assert.equal(parsed.length, 60);
+  assert.match(parsed[0].title, /Item ’0’ with & — “quotes”/);
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);
