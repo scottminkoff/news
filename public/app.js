@@ -1,24 +1,54 @@
 const TIERS = ['national', 'state', 'local'];
+const FILTER_KEY = 'news.sourceFilter';
+
+const state = {
+  tiers: {},
+  filter: localStorage.getItem(FILTER_KEY) || '',
+};
 
 async function loadTier(tier) {
-  const section = document.querySelector(`[data-tier="${tier}"]`);
-  const container = section.querySelector('.feed');
-  container.innerHTML = '<div class="loading">Loading…</div>';
-
   try {
     const res = await fetch(`./data/${tier}.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    state.tiers[tier] = await res.json();
+    return state.tiers[tier].fetched;
+  } catch (err) {
+    state.tiers[tier] = { error: err.message, items: [], sources: [] };
+    return null;
+  }
+}
 
-    container.innerHTML = '';
-    if (!data.items.length) {
-      container.innerHTML = '<div class="empty">No items.</div>';
-    } else {
-      const frag = document.createDocumentFragment();
-      for (const item of data.items) frag.appendChild(renderCard(item));
-      container.appendChild(frag);
-    }
+function renderTier(tier) {
+  const section = document.querySelector(`[data-tier="${tier}"]`);
+  const container = section.querySelector('.feed');
+  const data = state.tiers[tier];
+  container.innerHTML = '';
 
+  if (data.error) {
+    container.innerHTML = `<div class="error">Failed to load: ${escapeHtml(data.error)}</div>`;
+    section.classList.remove('hidden');
+    return;
+  }
+
+  const items = state.filter
+    ? data.items.filter(i => i.source === state.filter)
+    : data.items;
+
+  if (state.filter && items.length === 0) {
+    section.classList.add('hidden');
+    return;
+  }
+  section.classList.remove('hidden');
+
+  if (!items.length) {
+    container.innerHTML = '<div class="empty">No items.</div>';
+  } else {
+    const frag = document.createDocumentFragment();
+    for (const item of items) frag.appendChild(renderCard(item));
+    container.appendChild(frag);
+  }
+
+  if (!state.filter) {
     const failed = (data.sources || []).filter(s => !s.ok);
     if (failed.length) {
       const status = document.createElement('div');
@@ -26,11 +56,6 @@ async function loadTier(tier) {
       status.innerHTML = `<span class="failed">Failed: ${failed.map(f => escapeHtml(f.name)).join(', ')}</span>`;
       container.appendChild(status);
     }
-
-    return data.fetched;
-  } catch (err) {
-    container.innerHTML = `<div class="error">Failed to load: ${escapeHtml(err.message)}</div>`;
-    return null;
   }
 }
 
@@ -57,6 +82,27 @@ function renderCard(item) {
       </div>
     </div>`;
   return a;
+}
+
+function populateFilter() {
+  const select = document.getElementById('source-filter');
+  const names = new Set();
+  for (const tier of TIERS) {
+    for (const s of state.tiers[tier]?.sources || []) names.add(s.name);
+  }
+  const sorted = [...names].sort((a, b) => a.localeCompare(b));
+  select.innerHTML = '<option value="">All sources</option>' +
+    sorted.map(n => `<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`).join('');
+  if (state.filter && sorted.includes(state.filter)) {
+    select.value = state.filter;
+  } else if (state.filter) {
+    state.filter = '';
+    localStorage.removeItem(FILTER_KEY);
+  }
+}
+
+function applyFilter() {
+  for (const tier of TIERS) renderTier(tier);
 }
 
 function timeAgo(date) {
@@ -86,7 +132,16 @@ async function loadAll() {
   const updated = document.getElementById('updated');
   btn.disabled = true;
   updated.textContent = 'Updating…';
+
+  for (const tier of TIERS) {
+    const section = document.querySelector(`[data-tier="${tier}"]`);
+    section.querySelector('.feed').innerHTML = '<div class="loading">Loading…</div>';
+  }
+
   const fetchedTimes = await Promise.all(TIERS.map(loadTier));
+  populateFilter();
+  applyFilter();
+
   const ok = fetchedTimes.filter(Boolean);
   if (ok.length) {
     const latest = new Date(Math.max(...ok.map(t => new Date(t).getTime())));
@@ -98,4 +153,11 @@ async function loadAll() {
 }
 
 document.getElementById('refresh').addEventListener('click', loadAll);
+document.getElementById('source-filter').addEventListener('change', e => {
+  state.filter = e.target.value;
+  if (state.filter) localStorage.setItem(FILTER_KEY, state.filter);
+  else localStorage.removeItem(FILTER_KEY);
+  applyFilter();
+});
+
 loadAll();

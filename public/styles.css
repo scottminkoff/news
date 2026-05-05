@@ -54,7 +54,7 @@ h1 {
   color: var(--text-faint);
 }
 
-button {
+button, select {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
@@ -62,11 +62,17 @@ button {
   border-radius: 6px;
   font-size: 0.85rem;
   cursor: pointer;
+  font-family: inherit;
   transition: background 0.15s;
 }
 
-button:hover { background: var(--surface-hover); }
+button:hover, select:hover { background: var(--surface-hover); }
 button:disabled { opacity: 0.5; cursor: wait; }
+
+select { padding-right: 0.6rem; }
+select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.tier.hidden { display: none; }
 
 main {
   display: grid;
