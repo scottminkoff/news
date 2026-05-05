@@ -50,12 +50,15 @@ export function normalize(item, feed) {
     if (!isNaN(d.getTime())) pubDate = d.toISOString();
   }
   const rawDesc = item.description ?? item.summary ?? item['content:encoded'] ?? '';
-  const description = stripHtml(textOf(rawDesc)).slice(0, 280);
+  const cleanTitle = stripSourceSuffix(cleanText(title), feed.name);
+  let description = stripHtml(textOf(rawDesc));
+  if (isRedundantDescription(description, cleanTitle, feed.name)) description = '';
+  description = description.slice(0, 280);
   const image = extractImage(item);
   return {
     source: feed.name,
     sourceId: feed.id,
-    title: stripSourceSuffix(cleanText(title), feed.name),
+    title: cleanTitle,
     link,
     pubDate,
     description,
@@ -98,7 +101,8 @@ function extractImage(item) {
 }
 
 function stripHtml(s) {
-  const noTags = String(s).replace(/<[^>]+>/g, ' ');
+  const decoded = decodeEntities(String(s));
+  const noTags = decoded.replace(/<[^>]+>/g, ' ');
   return decodeEntities(noTags).replace(/\s+/g, ' ').trim();
 }
 
@@ -109,4 +113,16 @@ function cleanText(s) {
 function stripSourceSuffix(title, sourceName) {
   const suffix = ` - ${sourceName}`;
   return title.endsWith(suffix) ? title.slice(0, -suffix.length).trimEnd() : title;
+}
+
+function isRedundantDescription(desc, title, sourceName) {
+  if (!desc) return true;
+  const norm = s => s.toLowerCase().replace(/\s+/g, ' ').trim();
+  const d = norm(desc);
+  const t = norm(title);
+  if (!t) return false;
+  if (d === t) return true;
+  if (d === norm(`${title} ${sourceName}`)) return true;
+  if (d.startsWith(t) && d.length - t.length <= sourceName.length + 4) return true;
+  return false;
 }
