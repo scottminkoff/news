@@ -16,7 +16,6 @@ export const FEEDS = {
     { id: 'capcon',       name: 'Capital Confidential',  url: 'https://capitolconfidential.substack.com/feed' },
     { id: 'cands',        name: 'City & State',          url: 'https://www.cityandstateny.com/rss/all/' },
     { id: 'nysop',        name: 'NY State of Politics',  url: 'https://spectrumlocalnews.com/services/contentfeed.state-of-politics%7cnew-york%7cposts.landing.rss' },
-    { id: 'nyt_nyregion', name: 'NYT',                   url: 'https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml' },
   ],
   local: [
     { id: 'hv1',          name: 'Hudson Valley One',     url: 'https://hudsonvalleyone.com/feed/' },

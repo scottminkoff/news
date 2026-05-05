@@ -36,7 +36,6 @@ jobs:
         env:
           FEED_URL_NYT_POLITICS: ${{ secrets.FEED_URL_NYT_POLITICS }}
           FEED_URL_NYT_US:       ${{ secrets.FEED_URL_NYT_US }}
-          FEED_URL_NYT_NYREGION: ${{ secrets.FEED_URL_NYT_NYREGION }}
           FEED_URL_AXIOS:     ${{ secrets.FEED_URL_AXIOS }}
           FEED_URL_POLITICO:  ${{ secrets.FEED_URL_POLITICO }}
           FEED_URL_ATLANTIC:  ${{ secrets.FEED_URL_ATLANTIC }}
