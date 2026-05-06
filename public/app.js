@@ -312,7 +312,19 @@ async function loadAll() {
   btn.disabled = false;
 }
 
-document.getElementById('refresh').addEventListener('click', loadAll);
+document.getElementById('refresh').addEventListener('click', () => {
+  clearTimeout(searchTimer);
+  state.search = '';
+  searchEl.value = '';
+  state.timeFilter = '';
+  timeFilterEl.value = '';
+  localStorage.removeItem(TIME_FILTER_KEY);
+  state.filter = '';
+  document.getElementById('source-filter').value = '';
+  localStorage.removeItem(FILTER_KEY);
+  updateChipsActiveState();
+  loadAll();
+});
 
 document.getElementById('source-filter').addEventListener('change', e => {
   state.filter = e.target.value;
