@@ -1,4 +1,4 @@
-const KEYWORDS = ['New Paltz', 'Hochul', 'Districting', 'Budget'];
+const KEYWORDS = ['New Paltz', 'Kingston', 'Ulster County', 'Hochul', 'Districting', 'Budget', 'Charter'];
 
 const SOURCE_COLORS = {
   'NYT':                  '#586994',
