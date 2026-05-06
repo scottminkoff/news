@@ -1,3 +1,4 @@
+const KEYWORDS = ['New Paltz', 'Hochul', 'Districting', 'Budget'];
 const TIERS = ['national', 'state', 'local'];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
@@ -13,6 +14,30 @@ const state = {
   activeTier: TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : 'national',
   visited: loadVisited(),
 };
+
+function renderKeywordChips() {
+  const container = document.querySelector('.keyword-chips');
+  container.innerHTML = KEYWORDS
+    .map(k => `<button type="button" data-keyword="${escapeAttr(k)}">${escapeHtml(k)}</button>`)
+    .join('');
+  for (const btn of container.querySelectorAll('button')) {
+    btn.addEventListener('click', () => {
+      const kw = btn.dataset.keyword;
+      const isActive = state.search.toLowerCase() === kw.toLowerCase();
+      state.search = isActive ? '' : kw;
+      searchEl.value = state.search;
+      updateChipsActiveState();
+      applyFilter();
+    });
+  }
+}
+
+function updateChipsActiveState() {
+  const cur = state.search.toLowerCase();
+  for (const btn of document.querySelectorAll('.keyword-chips button')) {
+    btn.classList.toggle('active', btn.dataset.keyword.toLowerCase() === cur);
+  }
+}
 
 function applyActiveTier() {
   for (const tier of TIERS) {
@@ -272,9 +297,13 @@ searchEl.addEventListener('input', e => {
   const v = e.target.value;
   searchTimer = setTimeout(() => {
     state.search = v;
+    updateChipsActiveState();
     applyFilter();
   }, 120);
 });
+
+renderKeywordChips();
+updateChipsActiveState();
 
 for (const btn of document.querySelectorAll('.tier-tabs button')) {
   btn.addEventListener('click', () => {
