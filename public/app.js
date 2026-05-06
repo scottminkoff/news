@@ -212,12 +212,8 @@ function renderCard(item) {
   });
 
   const ago = item.pubDate ? timeAgo(new Date(item.pubDate)) : '';
-  const imgHtml = safeImage
-    ? `<img class="thumb" src="${escapeAttr(safeImage)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const p=this.parentElement; this.remove(); if(p) p.classList.add('no-image');">`
-    : '';
 
   a.innerHTML = `
-    ${imgHtml}
     <div class="card-body">
       <h3>${escapeHtml(item.title)}</h3>
       ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
@@ -226,6 +222,20 @@ function renderCard(item) {
         <span>${ago}</span>
       </div>
     </div>`;
+
+  if (safeImage) {
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.alt = '';
+    img.loading = 'lazy';
+    img.referrerPolicy = 'no-referrer';
+    img.src = safeImage;
+    img.addEventListener('error', () => {
+      img.remove();
+      a.classList.add('no-image');
+    });
+    a.prepend(img);
+  }
   return a;
 }
 

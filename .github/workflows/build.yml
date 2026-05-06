@@ -34,17 +34,20 @@ jobs:
       - name: Build feed JSON
         run: node scripts/build-feeds.js
         env:
-          FEED_URL_NYT_US:       ${{ secrets.FEED_URL_NYT_US }}
-          FEED_URL_AXIOS:     ${{ secrets.FEED_URL_AXIOS }}
-          FEED_URL_POLITICO:  ${{ secrets.FEED_URL_POLITICO }}
-          FEED_URL_ATLANTIC:  ${{ secrets.FEED_URL_ATLANTIC }}
-          FEED_URL_TPM:       ${{ secrets.FEED_URL_TPM }}
-          FEED_URL_NEWYORKER: ${{ secrets.FEED_URL_NEWYORKER }}
-          FEED_URL_TU_STATE:  ${{ secrets.FEED_URL_TU_STATE }}
-          FEED_URL_CAPCON:    ${{ secrets.FEED_URL_CAPCON }}
-          FEED_URL_CANDS:     ${{ secrets.FEED_URL_CANDS }}
-          FEED_URL_NYSOP:     ${{ secrets.FEED_URL_NYSOP }}
-          FEED_URL_HV1:       ${{ secrets.FEED_URL_HV1 }}
+          FEED_URL_NYT_US:      ${{ secrets.FEED_URL_NYT_US }}
+          FEED_URL_AXIOS:       ${{ secrets.FEED_URL_AXIOS }}
+          FEED_URL_POLITICO:    ${{ secrets.FEED_URL_POLITICO }}
+          FEED_URL_ATLANTIC:    ${{ secrets.FEED_URL_ATLANTIC }}
+          FEED_URL_TPM:         ${{ secrets.FEED_URL_TPM }}
+          FEED_URL_NEWYORKER:   ${{ secrets.FEED_URL_NEWYORKER }}
+          FEED_URL_TU_STATE:    ${{ secrets.FEED_URL_TU_STATE }}
+          FEED_URL_TU_CLARK:    ${{ secrets.FEED_URL_TU_CLARK }}
+          FEED_URL_CAPCON:      ${{ secrets.FEED_URL_CAPCON }}
+          FEED_URL_CANDS:       ${{ secrets.FEED_URL_CANDS }}
+          FEED_URL_NYSOP:       ${{ secrets.FEED_URL_NYSOP }}
+          FEED_URL_HV1:         ${{ secrets.FEED_URL_HV1 }}
+          FEED_URL_TU_HV:       ${{ secrets.FEED_URL_TU_HV }}
+          FEED_URL_DF_KINGSTON: ${{ secrets.FEED_URL_DF_KINGSTON }}
 
       - uses: actions/configure-pages@v5
 
