@@ -12,6 +12,7 @@ const SOURCE_COLORS = {
   'City & State':         '#F2F79E',
   'NY State of Politics': '#7ADFBB',
   'The Atlantic':         '#BEB0A7',
+  'Daily Freeman':        '#C8A8C0',
 };
 
 function pickTextColor(hex) {

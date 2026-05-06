@@ -20,5 +20,6 @@ export const FEEDS = {
   local: [
     { id: 'hv1',          name: 'Hudson Valley One',     url: 'https://hudsonvalleyone.com/feed/' },
     { id: 'tu_hv',        name: 'Times Union',           url: 'https://news.google.com/rss/search?q=site%3Atimesunion.com+%22Hudson+Valley%22&hl=en-US&gl=US&ceid=US%3Aen' },
+    { id: 'df_kingston',  name: 'Daily Freeman',         url: 'https://news.google.com/rss/search?q=site%3Adailyfreeman.com+%28Kingston+OR+%22Ulster+County%22+OR+%22New+Paltz%22+OR+Saugerties+OR+Woodstock+OR+Rosendale+OR+Hurley+OR+Marbletown%29+%28Mayor+OR+Council+OR+Legislature+OR+Sheriff+OR+Charter+OR+Budget+OR+Government+OR+Election+OR+Police%29&hl=en-US&gl=US&ceid=US%3Aen' },
   ],
 };
