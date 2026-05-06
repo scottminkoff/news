@@ -1,4 +1,25 @@
 const KEYWORDS = ['New Paltz', 'Hochul', 'Districting', 'Budget'];
+
+const SOURCE_COLORS = {
+  'NYT':                  '#586994',
+  'New Yorker':           '#7D869C',
+  'Axios':                '#A2ABAB',
+  'TPM':                  '#B4C4AE',
+  'Capital Confidential': '#E5E8B6',
+  'Politico':             '#967D69',
+  'Times Union':          '#92B9BD',
+  'Hudson Valley One':    '#A8D4AD',
+  'City & State':         '#F2F79E',
+  'NY State of Politics': '#7ADFBB',
+  'The Atlantic':         '#BEB0A7',
+};
+
+function pickTextColor(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 >= 128 ? '#000' : '#fff';
+}
 const TIERS = ['national', 'state', 'local'];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
@@ -197,7 +218,7 @@ function renderCard(item) {
       <h3>${escapeHtml(item.title)}</h3>
       ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
       <div class="card-meta">
-        <span class="source">${escapeHtml(item.source)}</span>
+        <span class="source"${sourceStyleAttr(item.source)}>${escapeHtml(item.source)}</span>
         <span>${ago}</span>
       </div>
     </div>`;
@@ -245,6 +266,12 @@ function escapeHtml(s) {
 
 function escapeAttr(s) {
   return escapeHtml(s);
+}
+
+function sourceStyleAttr(name) {
+  const bg = SOURCE_COLORS[name];
+  if (!bg) return '';
+  return ` style="background:${bg};color:${pickTextColor(bg)}"`;
 }
 
 async function loadAll() {
