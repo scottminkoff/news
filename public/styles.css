@@ -107,6 +107,8 @@ input[type="search"]:focus {
 
 .tier.hidden { display: none; }
 
+.tier-tabs { display: none; }
+
 main {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -155,17 +157,47 @@ main {
   main {
     grid-template-columns: 1fr;
     gap: 2rem;
-    padding: 1.5rem 1.25rem 2.5rem;
+    padding: 1rem 1.25rem 2.5rem;
     overflow: visible;
     flex: none;
     min-height: 0;
   }
   .tier { display: block; }
+  .tier.mobile-hidden { display: none; }
   .feed {
     overflow: visible;
     padding-bottom: 0;
     padding-right: 0;
     margin-right: 0;
+  }
+
+  .tier-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 1.25rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tier-tabs button {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.85rem 1rem;
+    margin-bottom: -1px;
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tier-tabs button:hover { background: none; color: var(--text); }
+  .tier-tabs button.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
   }
 }
 
