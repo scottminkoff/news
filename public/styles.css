@@ -178,7 +178,6 @@ main {
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
   .tier-tabs button {
     background: none;
@@ -192,6 +191,7 @@ main {
     font-size: 0.85rem;
     white-space: nowrap;
     cursor: pointer;
+    touch-action: manipulation;
     transition: color 0.15s, border-color 0.15s;
   }
   .tier-tabs button:hover { background: none; color: var(--text); }
