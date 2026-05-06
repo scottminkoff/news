@@ -1,6 +1,7 @@
 const TIERS = ['national', 'state', 'local'];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
+const ACTIVE_TIER_KEY = 'news.activeTier';
 const VISITED_KEY = 'news.visited';
 const VISITED_LIMIT = 1000;
 
@@ -9,8 +10,19 @@ const state = {
   filter: localStorage.getItem(FILTER_KEY) || '',
   timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
   search: '',
+  activeTier: TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : 'national',
   visited: loadVisited(),
 };
+
+function applyActiveTier() {
+  for (const tier of TIERS) {
+    const section = document.querySelector(`[data-tier="${tier}"]`);
+    section.classList.toggle('mobile-hidden', tier !== state.activeTier);
+  }
+  for (const btn of document.querySelectorAll('.tier-tabs button')) {
+    btn.classList.toggle('active', btn.dataset.tierTab === state.activeTier);
+  }
+}
 
 function loadVisited() {
   try {
@@ -263,5 +275,15 @@ searchEl.addEventListener('input', e => {
     applyFilter();
   }, 120);
 });
+
+for (const btn of document.querySelectorAll('.tier-tabs button')) {
+  btn.addEventListener('click', () => {
+    state.activeTier = btn.dataset.tierTab;
+    localStorage.setItem(ACTIVE_TIER_KEY, state.activeTier);
+    applyActiveTier();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+applyActiveTier();
 
 loadAll();
