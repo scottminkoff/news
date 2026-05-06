@@ -39,9 +39,9 @@ async function buildTier(tier, feeds) {
     const feed = feeds[i];
     if (r.status === 'fulfilled') {
       const count = r.value.length;
-      sources.push({ id: feed.id, name: feed.name, ok: count > 0, count, ...(count === 0 ? { error: 'no items parsed' } : {}) });
+      sources.push({ id: feed.id, name: feed.name, ok: true, count });
       items.push(...r.value);
-      if (count === 0) console.error(`[${tier}] ${feed.id}: 0 items parsed`);
+      if (count === 0) console.warn(`[${tier}] ${feed.id}: 0 items parsed`);
     } else {
       const err = String(r.reason).slice(0, 200);
       sources.push({ id: feed.id, name: feed.name, ok: false, error: err });
