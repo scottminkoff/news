@@ -258,7 +258,7 @@ main {
     justify-content: flex-end;
     gap: 0.4rem;
   }
-  #updated { display: none; }
+  #updated { font-size: 0.7rem; }
   input[type="search"] {
     flex: 1 1 0;
     min-width: 0;

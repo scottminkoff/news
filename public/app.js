@@ -316,9 +316,13 @@ async function loadAll() {
   const ok = fetchedTimes.filter(Boolean);
   if (ok.length) {
     const latest = new Date(Math.max(...ok.map(t => new Date(t).getTime())));
-    updated.textContent = `Updated ${timeAgo(latest)}`;
+    const date = latest.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    const time = latest.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    updated.textContent = `Last fetched ${date} · ${time}`;
+    updated.title = latest.toLocaleString();
   } else {
     updated.textContent = '';
+    updated.title = '';
   }
   btn.disabled = false;
 }
