@@ -201,6 +201,27 @@ main {
   }
 }
 
+@media (max-width: 700px) {
+  header {
+    padding: 0.5rem 0.85rem;
+  }
+  .logo { height: 40px; }
+  .header-right { gap: 0.4rem; }
+  #updated { display: none; }
+  input[type="search"] {
+    width: 110px;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.8rem;
+  }
+  .header-right select {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  #refresh { padding: 0.3rem 0.45rem; }
+  .tier-tabs { padding: 0 0.85rem; }
+  main { padding: 0.85rem 0.85rem 2rem; }
+}
+
 .card {
   display: grid;
   grid-template-columns: 100px 1fr;
