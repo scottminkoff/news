@@ -167,13 +167,16 @@ main {
 }
 
 .tier h2 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-dim);
   margin: 0 0 1.25rem;
-  font-weight: 600;
   flex-shrink: 0;
+  line-height: 0;
+}
+
+.tier h2 img {
+  height: 36px;
+  width: auto;
+  max-width: 100%;
+  display: block;
 }
 
 .feed {
