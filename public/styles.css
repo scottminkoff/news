@@ -42,7 +42,7 @@ header {
 }
 
 .logo {
-  height: 75px;
+  height: 38px;
   width: auto;
   display: block;
   margin-right: auto;
@@ -251,7 +251,7 @@ main {
     padding: 0.5rem 0.85rem;
     gap: 0.4rem 0.5rem;
   }
-  .logo { height: 40px; }
+  .logo { height: 20px; }
   .header-right { gap: 0.4rem; }
   #updated { display: none; }
   input[type="search"] {
