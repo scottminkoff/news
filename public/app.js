@@ -197,19 +197,22 @@ function renderDivider(label) {
 }
 
 function renderCard(item) {
+  const safeLink = safeUrl(item.link, ['http:', 'https:']);
+  const safeImage = safeUrl(item.image, ['http:', 'https:']);
   const a = document.createElement('a');
-  a.className = 'card' + (item.image ? '' : ' no-image') + (state.visited.has(item.link) ? ' visited' : '');
-  a.href = item.link;
+  a.className = 'card' + (safeImage ? '' : ' no-image') + (state.visited.has(safeLink) ? ' visited' : '');
+  a.href = safeLink || '#';
   a.target = '_blank';
   a.rel = 'noopener noreferrer';
   a.addEventListener('click', () => {
-    markVisited(item.link);
+    if (!safeLink) return;
+    markVisited(safeLink);
     a.classList.add('visited');
   });
 
   const ago = item.pubDate ? timeAgo(new Date(item.pubDate)) : '';
-  const imgHtml = item.image
-    ? `<img class="thumb" src="${escapeAttr(item.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove(); this.parentElement.classList.add('no-image');">`
+  const imgHtml = safeImage
+    ? `<img class="thumb" src="${escapeAttr(safeImage)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const p=this.parentElement; this.remove(); if(p) p.classList.add('no-image');">`
     : '';
 
   a.innerHTML = `
@@ -266,6 +269,16 @@ function escapeHtml(s) {
 
 function escapeAttr(s) {
   return escapeHtml(s);
+}
+
+function safeUrl(url, allowedProtocols) {
+  if (!url) return '';
+  try {
+    const u = new URL(url);
+    return allowedProtocols.includes(u.protocol) ? u.href : '';
+  } catch {
+    return '';
+  }
 }
 
 function sourceStyleAttr(name) {
