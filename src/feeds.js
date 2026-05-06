@@ -3,10 +3,9 @@
 
 export const FEEDS = {
   national: [
-    { id: 'nyt_politics', name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml' },
     { id: 'nyt_us',       name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/US.xml' },
     { id: 'axios',        name: 'Axios',        url: 'https://www.axios.com/feeds/feed.rss' },
-    { id: 'politico',     name: 'Politico',     url: 'https://rss.politico.com/politics-news.xml' },
+    { id: 'politico',     name: 'Politico',     url: 'https://rss.politico.com/playbook.xml' },
     { id: 'atlantic',     name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/all/' },
     { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/feed' },
     { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
