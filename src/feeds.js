@@ -26,6 +26,7 @@ export const FEEDS = {
     { id: 'goldberg',     name: 'Jonah Goldberg',        url: 'https://thedispatch.com/feed/?newsletter-brands=gfile' },
     { id: 'boilingfrogs', name: 'Boiling Frogs',         url: 'https://thedispatch.com/feed/?newsletter-brands=boilingfrogs' },
     { id: 'bouie',        name: 'Jamelle Bouie',         url: 'https://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/jamelle-bouie/rss.xml' },
+    { id: 'french',       name: 'David French',          url: 'https://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/david-french/rss.xml' },
     { id: 'marshall',     name: 'Josh Marshall',         url: 'https://talkingpointsmemo.com/edblog/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
     { id: 'nyt_sunday',   name: 'NYT Sunday Opinion',    url: 'https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml' },
   ],
