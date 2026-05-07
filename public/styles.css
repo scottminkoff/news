@@ -66,6 +66,7 @@ button, select {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  line-height: 1.5;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s, border-color 0.15s;
@@ -81,9 +82,9 @@ select { padding-right: 0.7rem; }
 select:focus { outline: 2px solid var(--border-strong); outline-offset: 1px; }
 
 #refresh {
-  padding: 0.35rem 0.55rem;
+  padding: 0.5rem 0.7rem;
   font-size: 1rem;
-  line-height: 1;
+  line-height: 1.275;
   color: var(--text-dim);
 }
 #refresh:hover { color: var(--text); }
@@ -92,9 +93,10 @@ input[type="search"] {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 0.45rem 0.7rem;
+  padding: 0.5rem 0.7rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  line-height: 1.5;
   font-family: inherit;
   width: 180px;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -257,22 +259,28 @@ main {
   .header-right {
     order: 99;
     flex: 1 1 100%;
+    flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.4rem;
   }
+  .header-right #updated { flex: 1 1 auto; }
   #updated { font-size: 0.7rem; }
   input[type="search"] {
-    flex: 1 1 0;
+    flex: 1 1 120px;
     min-width: 0;
     width: auto;
-    padding: 0.45rem 0.6rem;
+    padding: 0.4rem 0.6rem;
     font-size: 0.85rem;
   }
   .header-right select {
     padding: 0.4rem 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
-  #refresh { padding: 0.3rem 0.45rem; }
+  #refresh {
+    padding: 0.4rem 0.55rem;
+    font-size: 0.95rem;
+    line-height: 1.342;
+  }
   .tier-tabs { padding: 0 0.85rem; }
   .keyword-chips { padding: 0.5rem 0.85rem; }
   main { padding: 0.85rem 0.85rem 2rem; }
