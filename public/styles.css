@@ -150,8 +150,9 @@ input[type="search"]:focus {
 main {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
-  padding: 2rem 2.5rem 0;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2rem 2.5rem;
+  padding: 2rem 2.5rem;
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;

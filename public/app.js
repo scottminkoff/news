@@ -13,6 +13,15 @@ const SOURCE_COLORS = {
   'NY State of Politics': '#7ADFBB',
   'The Atlantic':         '#BEB0A7',
   'Daily Freeman':        '#C8A8C0',
+  'Times of Israel':      '#D4B896',
+  'The Forward':          '#9FB5C3',
+  'NYT World':            '#6B7BA8',
+  'WSJ World':            '#C9B6A8',
+  'Jonah Goldberg':       '#BFA890',
+  'Boiling Frogs':        '#9DB58E',
+  'Jamelle Bouie':        '#9D90BC',
+  'Josh Marshall':        '#8FA8C2',
+  'NYT Sunday Opinion':   '#7E8FB5',
 };
 
 function pickTextColor(hex) {
@@ -21,7 +30,7 @@ function pickTextColor(hex) {
   const b = parseInt(hex.slice(5, 7), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 >= 128 ? '#000' : '#fff';
 }
-const TIERS = ['national', 'state', 'local'];
+const TIERS = ['national', 'state', 'local', 'opinion', 'israel', 'foreign'];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
 const ACTIVE_TIER_KEY = 'news.activeTier';
