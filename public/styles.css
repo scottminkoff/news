@@ -174,9 +174,10 @@ main {
 }
 
 .tier h2 img {
-  height: 36px;
-  width: auto;
+  max-height: 36px;
   max-width: 100%;
+  height: auto;
+  width: auto;
   display: block;
 }
 
