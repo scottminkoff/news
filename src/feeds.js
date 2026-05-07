@@ -7,7 +7,7 @@ export const FEEDS = {
     { id: 'axios',        name: 'Axios',        url: 'https://www.axios.com/feeds/feed.rss' },
     { id: 'politico',     name: 'Politico',     url: 'https://rss.politico.com/playbook.xml' },
     { id: 'atlantic',     name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/all/' },
-    { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/feed' },
+    { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/news/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
     { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
   ],
   state: [
@@ -21,5 +21,20 @@ export const FEEDS = {
     { id: 'hv1',          name: 'Hudson Valley One',     url: 'https://hudsonvalleyone.com/feed/' },
     { id: 'tu_hv',        name: 'Times Union',           url: 'https://news.google.com/rss/search?q=site%3Atimesunion.com+%22Hudson+Valley%22&hl=en-US&gl=US&ceid=US%3Aen' },
     { id: 'df_kingston',  name: 'Daily Freeman',         url: 'https://news.google.com/rss/search?q=site%3Adailyfreeman.com+%28Kingston+OR+%22Ulster+County%22+OR+%22New+Paltz%22+OR+Saugerties+OR+Woodstock+OR+Rosendale+OR+Hurley+OR+Marbletown%29+%28Mayor+OR+Council+OR+Legislature+OR+Legislator+OR+Sheriff+OR+Charter+OR+Budget+OR+Government+OR+Election+OR+Police+OR+SUNY+OR+Democrat+OR+Republican+OR+Representative+OR+Assembly+OR+Senate+OR+Senator%29&hl=en-US&gl=US&ceid=US%3Aen' },
+  ],
+  opinion: [
+    { id: 'goldberg',     name: 'Jonah Goldberg',        url: 'https://thedispatch.com/feed/?newsletter-brands=gfile' },
+    { id: 'boilingfrogs', name: 'Boiling Frogs',         url: 'https://thedispatch.com/feed/?newsletter-brands=boilingfrogs' },
+    { id: 'bouie',        name: 'Jamelle Bouie',         url: 'https://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/jamelle-bouie/rss.xml' },
+    { id: 'marshall',     name: 'Josh Marshall',         url: 'https://talkingpointsmemo.com/edblog/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
+    { id: 'nyt_sunday',   name: 'NYT Sunday Opinion',    url: 'https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml' },
+  ],
+  israel: [
+    { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/israel-and-the-region/feed/' },
+    { id: 'forward',      name: 'The Forward',           url: 'https://forward.com/feed/' },
+  ],
+  foreign: [
+    { id: 'nyt_world',    name: 'NYT World',             url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
+    { id: 'wsj_world',    name: 'WSJ World',             url: 'https://feeds.content.dowjones.io/public/rss/RSSWorldNews' },
   ],
 };
