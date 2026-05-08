@@ -7,6 +7,13 @@ import { parseFeed } from '../src/parse.js';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const OUT_DIR = join(ROOT, 'public', 'data');
 const FETCH_TIMEOUT_MS = 20_000;
+const MAX_ITEM_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+
+function isWithinMaxAge(item, cutoff) {
+  if (!item.pubDate) return true;
+  const t = new Date(item.pubDate).getTime();
+  return !Number.isFinite(t) || t >= cutoff;
+}
 
 async function fetchFeed(feed) {
   const overrideKey = `FEED_URL_${feed.id.toUpperCase()}`;
@@ -33,14 +40,16 @@ async function fetchFeed(feed) {
 
 async function buildTier(tier, feeds) {
   const settled = await Promise.allSettled(feeds.map(fetchFeed));
+  const cutoff = Date.now() - MAX_ITEM_AGE_MS;
   const items = [];
   const sources = [];
   settled.forEach((r, i) => {
     const feed = feeds[i];
     if (r.status === 'fulfilled') {
-      const count = r.value.length;
+      const fresh = r.value.filter(item => isWithinMaxAge(item, cutoff));
+      const count = fresh.length;
       sources.push({ id: feed.id, name: feed.name, ok: true, count });
-      items.push(...r.value);
+      items.push(...fresh);
       if (count === 0) console.warn(`[${tier}] ${feed.id}: 0 items parsed`);
     } else {
       const err = String(r.reason).slice(0, 200);
