@@ -110,6 +110,8 @@ input[type="search"]:focus {
 
 .tier.hidden { display: none; }
 
+.tier[data-tier="all"] { display: none; }
+
 .tier-tabs { display: none; }
 
 .keyword-chips {
@@ -209,6 +211,7 @@ main {
     min-height: 0;
   }
   .tier { display: block; }
+  .tier[data-tier="all"] { display: block; }
   .tier.mobile-hidden { display: none; }
   .feed {
     overflow: visible;
