@@ -87,6 +87,15 @@ select:focus { outline: 2px solid var(--border-strong); outline-offset: 1px; }
   line-height: 1.275;
   color: var(--text-dim);
 }
+
+#search-toggle {
+  display: none;
+  padding: 0.4rem 0.55rem;
+  color: var(--text-dim);
+  align-items: center;
+  justify-content: center;
+}
+#search-toggle svg { display: block; }
 #refresh:hover { color: var(--text); }
 
 input[type="search"] {
@@ -270,19 +279,46 @@ main {
     justify-content: flex-end;
     gap: 0.4rem;
   }
-  .header-right #updated { flex: 1 1 auto; }
-  #updated { font-size: 0.7rem; }
+  #updated { display: none; }
+
+  #search-toggle { display: inline-flex; }
+
   input[type="search"] {
-    flex: 1 1 120px;
+    display: none;
+    flex: 1 1 100%;
     min-width: 0;
     width: auto;
     padding: 0.4rem 0.6rem;
     font-size: 0.85rem;
+    order: -1;
   }
+  body.search-open #search-toggle { display: none; }
+  body.search-open input[type="search"] { display: block; }
+
   .header-right select {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.85rem;
+    width: 36px;
+    padding: 0;
+    font-size: 0;
+    color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--surface);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
   }
+  #time-filter {
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a5a62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E");
+  }
+  #source-filter {
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a5a62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3'/%3E%3C/svg%3E");
+  }
+  .header-right select.has-value {
+    background-color: var(--accent);
+    border-color: var(--text);
+  }
+
   #refresh {
     padding: 0.4rem 0.55rem;
     font-size: 0.95rem;

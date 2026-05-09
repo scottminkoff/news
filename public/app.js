@@ -289,6 +289,7 @@ function populateFilter() {
     state.filter = '';
     localStorage.removeItem(FILTER_KEY);
   }
+  select.classList.toggle('has-value', !!state.filter);
 }
 
 function applyFilter() {
@@ -368,20 +369,26 @@ document.getElementById('refresh').addEventListener('click', () => {
   searchEl.value = '';
   state.timeFilter = '';
   timeFilterEl.value = '';
+  timeFilterEl.classList.remove('has-value');
   localStorage.removeItem(TIME_FILTER_KEY);
   state.filter = '';
-  document.getElementById('source-filter').value = '';
+  sourceFilterEl.value = '';
+  sourceFilterEl.classList.remove('has-value');
   localStorage.removeItem(FILTER_KEY);
+  document.body.classList.remove('search-open');
   updateChipsActiveState();
   loadAll();
 });
 
-document.getElementById('source-filter').addEventListener('change', e => {
+const sourceFilterEl = document.getElementById('source-filter');
+sourceFilterEl.addEventListener('change', e => {
   state.filter = e.target.value;
   if (state.filter) localStorage.setItem(FILTER_KEY, state.filter);
   else localStorage.removeItem(FILTER_KEY);
+  sourceFilterEl.classList.toggle('has-value', !!state.filter);
   applyFilter();
 });
+sourceFilterEl.classList.toggle('has-value', !!state.filter);
 
 const timeFilterEl = document.getElementById('time-filter');
 timeFilterEl.value = state.timeFilter;
@@ -389,7 +396,15 @@ timeFilterEl.addEventListener('change', e => {
   state.timeFilter = e.target.value;
   if (state.timeFilter) localStorage.setItem(TIME_FILTER_KEY, state.timeFilter);
   else localStorage.removeItem(TIME_FILTER_KEY);
+  timeFilterEl.classList.toggle('has-value', !!state.timeFilter);
   applyFilter();
+});
+timeFilterEl.classList.toggle('has-value', !!state.timeFilter);
+
+const searchToggleEl = document.getElementById('search-toggle');
+searchToggleEl.addEventListener('click', () => {
+  document.body.classList.add('search-open');
+  searchEl.focus();
 });
 
 const searchEl = document.getElementById('search');
@@ -402,6 +417,19 @@ searchEl.addEventListener('input', e => {
     updateChipsActiveState();
     applyFilter();
   }, 120);
+});
+searchEl.addEventListener('blur', () => {
+  if (!searchEl.value) document.body.classList.remove('search-open');
+});
+searchEl.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    searchEl.value = '';
+    state.search = '';
+    updateChipsActiveState();
+    applyFilter();
+    document.body.classList.remove('search-open');
+    searchEl.blur();
+  }
 });
 
 renderKeywordChips();
