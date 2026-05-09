@@ -32,6 +32,8 @@ function pickTextColor(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000 >= 128 ? '#000' : '#fff';
 }
 const TIERS = ['national', 'state', 'local', 'opinion', 'israel', 'foreign'];
+const ALL_TIER = 'all';
+const RENDER_TIERS = [ALL_TIER, ...TIERS];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
 const ACTIVE_TIER_KEY = 'news.activeTier';
@@ -43,7 +45,7 @@ const state = {
   filter: localStorage.getItem(FILTER_KEY) || '',
   timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
   search: '',
-  activeTier: TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : 'national',
+  activeTier: RENDER_TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : ALL_TIER,
   visited: loadVisited(),
 };
 
@@ -72,13 +74,34 @@ function updateChipsActiveState() {
 }
 
 function applyActiveTier() {
-  for (const tier of TIERS) {
+  for (const tier of RENDER_TIERS) {
     const section = document.querySelector(`[data-tier="${tier}"]`);
-    section.classList.toggle('mobile-hidden', tier !== state.activeTier);
+    if (section) section.classList.toggle('mobile-hidden', tier !== state.activeTier);
   }
   for (const btn of document.querySelectorAll('.tier-tabs button')) {
     btn.classList.toggle('active', btn.dataset.tierTab === state.activeTier);
   }
+}
+
+function aggregatedAll() {
+  const items = [];
+  const sources = [];
+  const seen = new Set();
+  for (const t of TIERS) {
+    const d = state.tiers[t];
+    if (!d) continue;
+    if (Array.isArray(d.sources)) sources.push(...d.sources);
+    if (!Array.isArray(d.items)) continue;
+    for (const it of d.items) {
+      if (it.link) {
+        if (seen.has(it.link)) continue;
+        seen.add(it.link);
+      }
+      items.push(it);
+    }
+  }
+  items.sort((a, b) => (b.pubDate || '').localeCompare(a.pubDate || ''));
+  return { items, sources };
 }
 
 function loadVisited() {
@@ -113,8 +136,10 @@ async function loadTier(tier) {
 
 function renderTier(tier) {
   const section = document.querySelector(`[data-tier="${tier}"]`);
+  if (!section) return;
   const container = section.querySelector('.feed');
-  const data = state.tiers[tier];
+  const data = tier === ALL_TIER ? aggregatedAll() : state.tiers[tier];
+  if (!data) return;
   container.innerHTML = '';
 
   if (data.error) {
@@ -267,7 +292,7 @@ function populateFilter() {
 }
 
 function applyFilter() {
-  for (const tier of TIERS) renderTier(tier);
+  for (const tier of RENDER_TIERS) renderTier(tier);
 }
 
 function timeAgo(date) {
@@ -314,9 +339,9 @@ async function loadAll() {
   btn.disabled = true;
   updated.textContent = 'Updating…';
 
-  for (const tier of TIERS) {
+  for (const tier of RENDER_TIERS) {
     const section = document.querySelector(`[data-tier="${tier}"]`);
-    section.querySelector('.feed').innerHTML = '<div class="loading">Loading…</div>';
+    if (section) section.querySelector('.feed').innerHTML = '<div class="loading">Loading…</div>';
   }
 
   const fetchedTimes = await Promise.all(TIERS.map(loadTier));
