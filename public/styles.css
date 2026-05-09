@@ -297,6 +297,7 @@ main {
 
   .header-right select {
     width: 36px;
+    height: 33px;
     padding: 0;
     font-size: 0;
     color: transparent;
