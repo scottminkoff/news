@@ -271,7 +271,7 @@ main {
     padding: 0.5rem 0.85rem;
     gap: 0.4rem 0.5rem;
   }
-  .logo { height: 24px; margin-right: 0; }
+  .logo { height: 32px; margin-right: 0; }
   .header-right {
     order: 99;
     flex: 1 1 100%;
