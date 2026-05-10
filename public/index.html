@@ -30,9 +30,6 @@
       <select id="source-filter" aria-label="Filter by source">
         <option value="">All sources</option>
       </select>
-      <button id="saved-toggle" type="button" aria-pressed="false" aria-label="Show saved only" title="Show saved only">
-        <img src="./bookmark-ui-svgrepo-com.svg" alt="" width="14" height="14"><span class="saved-label">Saved</span>
-      </button>
       <button id="refresh" type="button" aria-label="Refresh" title="Refresh">↻</button>
       <div id="auth-status" class="auth-status">
         <button id="signin-open" type="button" class="auth-link">Sign in</button>
@@ -46,6 +43,7 @@
   <div class="keyword-chips" aria-label="Quick searches"></div>
   <nav class="tier-tabs" aria-label="Select section">
     <button type="button" data-tier-tab="all">All</button>
+    <button type="button" data-tier-tab="saved">Saved</button>
     <button type="button" data-tier-tab="national">National</button>
     <button type="button" data-tier-tab="state">New York State</button>
     <button type="button" data-tier-tab="local">Hudson Valley</button>
@@ -56,6 +54,10 @@
   <main>
     <section class="tier" data-tier="all">
       <h2><img src="./all.png" alt="All" /></h2>
+      <div class="feed"></div>
+    </section>
+    <section class="tier" data-tier="saved">
+      <h2 class="saved-heading"><img src="./bookmark-ui-svgrepo-com.svg" alt="" width="28" height="28"> Saved</h2>
       <div class="feed"></div>
     </section>
     <section class="tier" data-tier="national">
