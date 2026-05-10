@@ -33,7 +33,8 @@ function pickTextColor(hex) {
 }
 const TIERS = ['national', 'state', 'local', 'opinion', 'israel', 'foreign'];
 const ALL_TIER = 'all';
-const RENDER_TIERS = [ALL_TIER, ...TIERS];
+const SAVED_TIER = 'saved';
+const RENDER_TIERS = [ALL_TIER, SAVED_TIER, ...TIERS];
 const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
 const ACTIVE_TIER_KEY = 'news.activeTier';
@@ -47,7 +48,6 @@ const state = {
   search: '',
   activeTier: RENDER_TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : ALL_TIER,
   visited: loadVisited(),
-  savedOnly: false,
 };
 
 function renderKeywordChips() {
@@ -105,6 +105,24 @@ function aggregatedAll() {
   return { items, sources };
 }
 
+function aggregatedSaved() {
+  const byId = new Map();
+  for (const t of TIERS) {
+    for (const it of state.tiers[t]?.items || []) {
+      byId.set(window.Bookmarks.idFor(it), it);
+    }
+  }
+  const items = window.Bookmarks.getList().map(b => byId.get(b.id) || {
+    title: b.title || '(saved item)',
+    link: b.url || '',
+    source: b.source || '',
+    pubDate: b.savedAt ? new Date(b.savedAt).toISOString() : null,
+    description: '',
+    image: null,
+  });
+  return { items, sources: [] };
+}
+
 function loadVisited() {
   try {
     const raw = localStorage.getItem(VISITED_KEY);
@@ -139,7 +157,10 @@ function renderTier(tier) {
   const section = document.querySelector(`[data-tier="${tier}"]`);
   if (!section) return;
   const container = section.querySelector('.feed');
-  const data = tier === ALL_TIER ? aggregatedAll() : state.tiers[tier];
+  let data;
+  if (tier === ALL_TIER) data = aggregatedAll();
+  else if (tier === SAVED_TIER) data = aggregatedSaved();
+  else data = state.tiers[tier];
   if (!data) return;
   container.innerHTML = '';
 
@@ -150,7 +171,7 @@ function renderTier(tier) {
   }
 
   const items = filterItems(data.items);
-  const filtersActive = state.filter || state.timeFilter || state.search || state.savedOnly;
+  const filtersActive = state.filter || state.timeFilter || state.search;
 
   if (filtersActive && items.length === 0) {
     section.classList.add('hidden');
@@ -159,15 +180,24 @@ function renderTier(tier) {
   section.classList.remove('hidden');
 
   if (!items.length) {
-    container.innerHTML = '<div class="empty">No items.</div>';
+    if (tier === SAVED_TIER) {
+      container.innerHTML = window.Auth.isSignedIn()
+        ? '<div class="empty">No saved articles yet. Tap the bookmark icon on a card to save it.</div>'
+        : '<div class="empty">Sign in to save and view bookmarks.</div>';
+    } else {
+      container.innerHTML = '<div class="empty">No items.</div>';
+    }
   } else {
     const frag = document.createDocumentFragment();
     let lastBucket = null;
+    const skipDividers = tier === SAVED_TIER;
     for (const item of items) {
-      const bucket = bucketOf(item.pubDate);
-      if (bucket !== lastBucket) {
-        frag.appendChild(renderDivider(BUCKET_LABELS[bucket]));
-        lastBucket = bucket;
+      if (!skipDividers) {
+        const bucket = bucketOf(item.pubDate);
+        if (bucket !== lastBucket) {
+          frag.appendChild(renderDivider(BUCKET_LABELS[bucket]));
+          lastBucket = bucket;
+        }
       }
       frag.appendChild(renderCard(item));
     }
@@ -192,7 +222,6 @@ function filterItems(items) {
   const q = state.search.trim().toLowerCase();
   return items.filter(item => {
     if (state.filter && item.source !== state.filter) return false;
-    if (state.savedOnly && !window.Bookmarks.isBookmarked(window.Bookmarks.idFor(item))) return false;
     if (cutoff !== null) {
       if (!item.pubDate) return false;
       const t = new Date(item.pubDate).getTime();
@@ -519,18 +548,6 @@ signinForm.addEventListener('submit', async e => {
   }
 });
 
-const savedToggleBtn = document.getElementById('saved-toggle');
-savedToggleBtn.addEventListener('click', () => {
-  if (!window.Auth.isSignedIn() && !state.savedOnly) {
-    openSignIn();
-    return;
-  }
-  state.savedOnly = !state.savedOnly;
-  savedToggleBtn.setAttribute('aria-pressed', String(state.savedOnly));
-  savedToggleBtn.classList.toggle('active', state.savedOnly);
-  applyFilter();
-});
-
 function renderAuthStatus() {
   const signedIn = window.Auth.isSignedIn();
   const session = window.Auth.getSession();
@@ -538,11 +555,6 @@ function renderAuthStatus() {
   const wrap = document.querySelector('.auth-signed-in');
   wrap.hidden = !signedIn;
   document.getElementById('auth-email').textContent = session?.email || '';
-  if (!signedIn && state.savedOnly) {
-    state.savedOnly = false;
-    savedToggleBtn.setAttribute('aria-pressed', 'false');
-    savedToggleBtn.classList.remove('active');
-  }
 }
 
 window.Auth.subscribe(() => {
