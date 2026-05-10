@@ -330,6 +330,11 @@ main {
     height: 33px;
   }
   #saved-toggle .saved-label { display: none; }
+
+  .auth-status { font-size: 0.78rem; gap: 0.25rem; }
+  .auth-status .auth-link { padding: 0.3rem 0.45rem; }
+  .auth-status #auth-email { display: none; }
+
   .tier-tabs { padding: 0 0.85rem; }
   .keyword-chips { padding: 0.5rem 0.85rem; }
   main { padding: 0.85rem 0.85rem 2rem; }
