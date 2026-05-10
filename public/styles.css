@@ -175,13 +175,12 @@ main {
   overflow: hidden;
 }
 
-body.bookmarks-only main {
-  grid-template-columns: minmax(0, 900px);
-  grid-template-rows: 1fr;
-  justify-content: center;
-}
 body.bookmarks-only main > .tier { display: none; }
-body.bookmarks-only main > .tier[data-tier="saved"] { display: flex; }
+body.bookmarks-only main > .tier[data-tier="saved"] {
+  display: flex;
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
 
 .tier {
   display: flex;
