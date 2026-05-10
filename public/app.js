@@ -182,7 +182,7 @@ function renderTier(tier) {
   if (!items.length) {
     if (tier === SAVED_TIER) {
       container.innerHTML = window.Auth.isSignedIn()
-        ? '<div class="empty">No saved articles yet. Tap the bookmark icon on a card to save it.</div>'
+        ? '<div class="empty">No bookmarks yet. Tap the bookmark icon on a card to save it.</div>'
         : '<div class="empty">Sign in to save and view bookmarks.</div>';
     } else {
       container.innerHTML = '<div class="empty">No items.</div>';

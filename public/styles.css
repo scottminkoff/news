@@ -119,8 +119,7 @@ input[type="search"]:focus {
 
 .tier.hidden { display: none; }
 
-.tier[data-tier="all"],
-.tier[data-tier="saved"] { display: none; }
+.tier[data-tier="all"] { display: none; }
 
 .tier-tabs { display: none; }
 
@@ -163,7 +162,7 @@ input[type="search"]:focus {
 
 main {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 2rem 2.5rem;
   padding: 2rem 2.5rem;
@@ -221,8 +220,7 @@ main {
     min-height: 0;
   }
   .tier { display: block; }
-  .tier[data-tier="all"],
-  .tier[data-tier="saved"] { display: block; }
+  .tier[data-tier="all"] { display: block; }
   .tier.mobile-hidden { display: none; }
   .feed {
     overflow: visible;
@@ -469,16 +467,6 @@ main {
 .auth-status .auth-link:hover { color: var(--text); background: var(--surface); }
 .auth-status .auth-signed-in { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-dim); }
 .auth-status #auth-email { font-size: 0.78rem; }
-
-.saved-heading {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-.saved-heading img { display: block; }
 
 .bookmark-btn {
   position: absolute;
