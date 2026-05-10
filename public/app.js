@@ -39,6 +39,7 @@ const FILTER_KEY = 'news.sourceFilter';
 const TIME_FILTER_KEY = 'news.timeFilter';
 const ACTIVE_TIER_KEY = 'news.activeTier';
 const VISITED_KEY = 'news.visited';
+const BOOKMARKS_ONLY_KEY = 'news.bookmarksOnly';
 const VISITED_LIMIT = 1000;
 
 const state = {
@@ -48,6 +49,7 @@ const state = {
   search: '',
   activeTier: RENDER_TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : ALL_TIER,
   visited: loadVisited(),
+  bookmarksOnly: localStorage.getItem(BOOKMARKS_ONLY_KEY) === '1',
 };
 
 function renderKeywordChips() {
@@ -523,6 +525,21 @@ signinModal.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !signinModal.hidden) closeSignIn();
 });
+
+const bookmarksViewBtn = document.getElementById('bookmarks-view-toggle');
+function applyBookmarksView() {
+  document.body.classList.toggle('bookmarks-only', state.bookmarksOnly);
+  bookmarksViewBtn.classList.toggle('active', state.bookmarksOnly);
+  bookmarksViewBtn.setAttribute('aria-pressed', String(state.bookmarksOnly));
+}
+bookmarksViewBtn.addEventListener('click', () => {
+  state.bookmarksOnly = !state.bookmarksOnly;
+  if (state.bookmarksOnly) localStorage.setItem(BOOKMARKS_ONLY_KEY, '1');
+  else localStorage.removeItem(BOOKMARKS_ONLY_KEY);
+  applyBookmarksView();
+  if (state.bookmarksOnly) renderTier(SAVED_TIER);
+});
+applyBookmarksView();
 
 document.getElementById('signin-open').addEventListener('click', openSignIn);
 document.getElementById('signout').addEventListener('click', () => {
