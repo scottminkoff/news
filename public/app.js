@@ -47,6 +47,7 @@ const state = {
   search: '',
   activeTier: RENDER_TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : ALL_TIER,
   visited: loadVisited(),
+  savedOnly: false,
 };
 
 function renderKeywordChips() {
@@ -149,7 +150,7 @@ function renderTier(tier) {
   }
 
   const items = filterItems(data.items);
-  const filtersActive = state.filter || state.timeFilter || state.search;
+  const filtersActive = state.filter || state.timeFilter || state.search || state.savedOnly;
 
   if (filtersActive && items.length === 0) {
     section.classList.add('hidden');
@@ -191,6 +192,7 @@ function filterItems(items) {
   const q = state.search.trim().toLowerCase();
   return items.filter(item => {
     if (state.filter && item.source !== state.filter) return false;
+    if (state.savedOnly && !window.Bookmarks.isBookmarked(window.Bookmarks.idFor(item))) return false;
     if (cutoff !== null) {
       if (!item.pubDate) return false;
       const t = new Date(item.pubDate).getTime();
@@ -235,6 +237,8 @@ function renderDivider(label) {
 function renderCard(item) {
   const safeLink = safeUrl(item.link, ['http:', 'https:']);
   const safeImage = safeUrl(item.image, ['http:', 'https:']);
+  const bookmarkId = window.Bookmarks.idFor(item);
+  const isBookmarked = window.Bookmarks.isBookmarked(bookmarkId);
   const a = document.createElement('a');
   a.className = 'card' + (safeImage ? '' : ' no-image') + (state.visited.has(safeLink) ? ' visited' : '');
   a.href = safeLink || '#';
@@ -271,6 +275,24 @@ function renderCard(item) {
     });
     a.prepend(img);
   }
+
+  const bm = document.createElement('button');
+  bm.type = 'button';
+  bm.className = 'bookmark-btn' + (isBookmarked ? ' active' : '');
+  bm.setAttribute('aria-label', isBookmarked ? 'Remove bookmark' : 'Save bookmark');
+  bm.setAttribute('aria-pressed', String(isBookmarked));
+  bm.innerHTML = '<img src="./bookmark-ui-svgrepo-com.svg" alt="" width="16" height="16">';
+  bm.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.Auth.isSignedIn()) {
+      openSignIn();
+      return;
+    }
+    window.Bookmarks.toggle(item);
+  });
+  a.appendChild(bm);
+
   return a;
 }
 
@@ -445,4 +467,96 @@ for (const btn of document.querySelectorAll('.tier-tabs button')) {
 }
 applyActiveTier();
 
-loadAll();
+// --- auth + bookmarks UI ---
+
+const signinModal = document.getElementById('signin-modal');
+const signinForm = document.getElementById('signin-form');
+const signinEmail = document.getElementById('signin-email');
+const signinSubmit = document.getElementById('signin-submit');
+const signinMessage = document.getElementById('signin-message');
+
+function openSignIn() {
+  signinMessage.hidden = true;
+  signinMessage.textContent = '';
+  signinForm.hidden = false;
+  signinModal.hidden = false;
+  setTimeout(() => signinEmail.focus(), 0);
+}
+
+function closeSignIn() {
+  signinModal.hidden = true;
+}
+
+signinModal.addEventListener('click', e => {
+  if (e.target.matches('[data-close]')) closeSignIn();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !signinModal.hidden) closeSignIn();
+});
+
+document.getElementById('signin-open').addEventListener('click', openSignIn);
+document.getElementById('signout').addEventListener('click', () => {
+  window.Auth.signOut();
+});
+
+signinForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = signinEmail.value.trim();
+  if (!email) return;
+  signinSubmit.disabled = true;
+  signinMessage.hidden = true;
+  try {
+    await window.Auth.requestLink(email);
+    signinForm.hidden = true;
+    signinMessage.hidden = false;
+    signinMessage.textContent = `Check ${email} for a sign-in link. It expires in 10 minutes.`;
+  } catch (err) {
+    signinMessage.hidden = false;
+    signinMessage.textContent = `Couldn't send link: ${err.message}`;
+  } finally {
+    setTimeout(() => { signinSubmit.disabled = false; }, 30_000);
+  }
+});
+
+const savedToggleBtn = document.getElementById('saved-toggle');
+savedToggleBtn.addEventListener('click', () => {
+  if (!window.Auth.isSignedIn() && !state.savedOnly) {
+    openSignIn();
+    return;
+  }
+  state.savedOnly = !state.savedOnly;
+  savedToggleBtn.setAttribute('aria-pressed', String(state.savedOnly));
+  savedToggleBtn.classList.toggle('active', state.savedOnly);
+  applyFilter();
+});
+
+function renderAuthStatus() {
+  const signedIn = window.Auth.isSignedIn();
+  const session = window.Auth.getSession();
+  document.getElementById('signin-open').hidden = signedIn;
+  const wrap = document.querySelector('.auth-signed-in');
+  wrap.hidden = !signedIn;
+  document.getElementById('auth-email').textContent = session?.email || '';
+  if (!signedIn && state.savedOnly) {
+    state.savedOnly = false;
+    savedToggleBtn.setAttribute('aria-pressed', 'false');
+    savedToggleBtn.classList.remove('active');
+  }
+}
+
+window.Auth.subscribe(() => {
+  renderAuthStatus();
+  applyFilter();
+  if (!signinModal.hidden && window.Auth.isSignedIn()) closeSignIn();
+});
+window.Bookmarks.subscribe(applyFilter);
+renderAuthStatus();
+
+(async () => {
+  await window.Auth.init();
+  if (window.Auth.isSignedIn()) {
+    window.Bookmarks.loadServer();
+  }
+  loadAll();
+})();
