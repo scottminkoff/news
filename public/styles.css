@@ -331,6 +331,7 @@ main {
 }
 
 .card {
+  position: relative;
   display: grid;
   grid-template-columns: 100px 1fr;
   gap: 1rem;
@@ -446,3 +447,115 @@ main {
 .feed-status .failed {
   color: var(--error);
 }
+
+/* --- bookmarks + auth UI --- */
+
+.auth-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+.auth-status .auth-link {
+  background: transparent;
+  border: 0;
+  padding: 0.35rem 0.6rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  font: inherit;
+  border-radius: 6px;
+}
+.auth-status .auth-link:hover { color: var(--text); background: var(--surface); }
+.auth-status .auth-signed-in { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-dim); }
+.auth-status #auth-email { font-size: 0.78rem; }
+
+.saved-toggle { display: flex; justify-content: flex-end; padding: 0 1rem 0.4rem; }
+#saved-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+#saved-toggle:hover { border-color: var(--border-strong); color: var(--text); }
+#saved-toggle.active {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+#saved-toggle img { display: block; opacity: 0.85; }
+
+.bookmark-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.card:hover .bookmark-btn { opacity: 1; }
+.bookmark-btn:hover { transform: scale(1.05); }
+.bookmark-btn.active { opacity: 1; border-color: var(--accent); }
+.bookmark-btn img { display: block; pointer-events: none; }
+
+/* sign-in modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal[hidden] { display: none; }
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.modal-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: min(420px, 90vw);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+.modal-card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.modal-desc { margin: 0 0 1rem; color: var(--text-dim); font-size: 0.85rem; line-height: 1.4; }
+.modal-card input[type="email"] {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.5rem; }
+.modal-actions button {
+  padding: 0.45rem 0.95rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.modal-actions #signin-submit {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.modal-actions #signin-submit:disabled { opacity: 0.6; cursor: default; }
+.modal-message { margin: 0; color: var(--text-dim); font-size: 0.85rem; line-height: 1.4; }
