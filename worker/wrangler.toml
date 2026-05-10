@@ -14,5 +14,5 @@ FROM_EMAIL = "onboarding@resend.dev"
 # can match for development.
 [[kv_namespaces]]
 binding = "BOOKMARKS_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "50fcbf91143e463d80ff8c5ef4e8d628"
+preview_id = "50fcbf91143e463d80ff8c5ef4e8d628"
