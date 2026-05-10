@@ -148,20 +148,37 @@ button disables for 30s after click.
   effectively this; just don't add a manual `===` on user-supplied
   strings beyond the KV lookup).
 
-## Setup steps (for the README)
+## Deploy: GitHub Actions, no local Wrangler
 
-1. `cd worker && npm install`
-2. `npx wrangler login`
-3. `npx wrangler kv:namespace create NEWS_KV` → paste id into
-   `wrangler.toml`.
-4. Sign up at resend.com, verify a sending domain (or use their test
-   domain for dev), get API key.
-5. `npx wrangler secret put RESEND_API_KEY`
-6. `npx wrangler secret put ALLOWED_EMAILS` (value: my email).
-7. `npx wrangler deploy` → note the workers.dev URL.
-8. Set `API_BASE` constant in `public/auth.js` + `public/bookmarks.js`
-   to that URL.
-9. (Optional) Add custom domain in Cloudflare dashboard.
+No Node / Wrangler on the user's laptop. Deploys run from a workflow
+at `.github/workflows/deploy-worker.yml`:
+
+- Triggered on push to `main` (or manual dispatch) when files under
+  `worker/**` change.
+- Steps: checkout → `actions/setup-node` → `npm ci` in `worker/` →
+  `npx wrangler deploy` → `npx wrangler secret put RESEND_API_KEY`
+  (piped from `${{ secrets.RESEND_API_KEY }}`).
+- Auth via `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` env vars
+  (read from repo secrets).
+
+`ALLOWED_EMAILS` lives in `wrangler.toml` `[vars]` (not actually
+secret — just an allowlist), so it's checked in. `RESEND_API_KEY` is
+the only real secret pushed via `wrangler secret put` from CI.
+
+KV namespace creation is a one-time manual step the user does in the
+Cloudflare dashboard (or I do via a one-shot workflow_dispatch job),
+because `wrangler kv:namespace create` returns an id we then need to
+paste into `wrangler.toml`.
+
+After first deploy:
+- Note the `workers.dev` URL from the Actions log.
+- Set `API_BASE` in `public/auth.js` + `public/bookmarks.js`.
+- (Optional) attach a custom domain in the Cloudflare dashboard.
+
+Required GitHub repo secrets:
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+- `RESEND_API_KEY`
 
 ## What's explicitly out of scope
 
