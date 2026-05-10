@@ -508,12 +508,31 @@ main {
   border-radius: 6px;
   cursor: pointer;
   opacity: 0.55;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: opacity 0.15s, transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 .card:hover .bookmark-btn { opacity: 1; }
-.bookmark-btn:hover { transform: scale(1.05); }
-.bookmark-btn.active { opacity: 1; border-color: var(--accent); }
-.bookmark-btn img { display: block; pointer-events: none; }
+.bookmark-btn:hover { transform: scale(1.08); }
+.bookmark-btn img {
+  display: block;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  filter: grayscale(100%);
+  transition: filter 0.15s, width 0.15s, height 0.15s;
+}
+.bookmark-btn.active {
+  opacity: 1;
+  background: #fff8e1;
+  border-color: #f0a500;
+  box-shadow: 0 0 0 2px rgba(240, 165, 0, 0.18);
+  transform: scale(1.08);
+}
+.bookmark-btn.active:hover { transform: scale(1.14); }
+.bookmark-btn.active img {
+  filter: none;
+  width: 18px;
+  height: 18px;
+}
 
 /* sign-in modal */
 .modal {
