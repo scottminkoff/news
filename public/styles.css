@@ -325,6 +325,11 @@ main {
     font-size: 0.95rem;
     line-height: 1.342;
   }
+  #saved-toggle {
+    padding: 0.4rem 0.55rem;
+    height: 33px;
+  }
+  #saved-toggle .saved-label { display: none; }
   .tier-tabs { padding: 0 0.85rem; }
   .keyword-chips { padding: 0.5rem 0.85rem; }
   main { padding: 0.85rem 0.85rem 2rem; }
@@ -464,27 +469,29 @@ main {
 .auth-status .auth-signed-in { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-dim); }
 .auth-status #auth-email { font-size: 0.78rem; }
 
-.saved-toggle { display: flex; justify-content: flex-end; padding: 0 1rem 0.4rem; }
 #saved-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: transparent;
+  background: var(--surface);
   border: 1px solid var(--border);
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.78rem;
   color: var(--text-dim);
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  cursor: pointer;
+  font-family: inherit;
 }
-#saved-toggle:hover { border-color: var(--border-strong); color: var(--text); }
+#saved-toggle:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--text); }
 #saved-toggle.active {
-  background: var(--accent);
-  color: var(--accent-text);
-  border-color: var(--accent);
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
 }
+#saved-toggle.active:hover { background: var(--text); color: var(--bg); }
 #saved-toggle img { display: block; opacity: 0.85; }
+#saved-toggle.active img { filter: invert(1); opacity: 1; }
 
 .bookmark-btn {
   position: absolute;
