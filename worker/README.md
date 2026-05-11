@@ -19,6 +19,13 @@ sends magic-link emails.
    - `CLOUDFLARE_ACCOUNT_ID` — from Cloudflare dashboard sidebar.
    - `RESEND_API_KEY` — from Resend dashboard.
 
+3. **Worker secrets** (set via Cloudflare dashboard → news-api → Settings
+   → Variables and Secrets, or `npx wrangler secret put <NAME>`):
+   - `RESEND_API_KEY` — also pushed in by the deploy workflow.
+   - `GITHUB_PAT` — fine-grained PAT with **Actions: write** on this repo
+     only. Used by the scheduled handler to dispatch the build workflow.
+     See `docs/cron-cloudflare-trigger.md`.
+
 ## Deploy
 
 Pushes to `main` that touch `worker/**` trigger
