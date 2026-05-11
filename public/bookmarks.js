@@ -94,7 +94,7 @@ window.Bookmarks = (function () {
         body: JSON.stringify(item),
       });
       if (res.status === 409) {
-        alert('Bookmark limit reached. Remove some saved items first.');
+        window.showToast?.('Bookmark limit reached. Remove some saved items first.');
         setItems(prev);
         return;
       }

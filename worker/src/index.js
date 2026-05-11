@@ -53,7 +53,7 @@ function corsHeaders(req, env) {
     .split(',')
     .map(s => s.trim())
     .filter(Boolean);
-  const isLocal = /^http:\/\/localhost(:\d+)?$/.test(origin);
+  const isLocal = env.ALLOW_LOCALHOST === '1' && /^http:\/\/localhost(:\d+)?$/.test(origin);
   const ok = allowed.includes(origin) || isLocal;
 
   const headers = {

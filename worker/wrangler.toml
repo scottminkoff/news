@@ -7,6 +7,8 @@ ALLOWED_EMAILS = "sminkoff@gmail.com"
 ALLOWED_ORIGIN = "https://scottminkoff.github.io"
 SITE_URL = "https://scottminkoff.github.io/news/"
 FROM_EMAIL = "onboarding@resend.dev"
+# Set ALLOW_LOCALHOST = "1" for dev only (e.g. via `wrangler dev` overrides) to
+# permit http://localhost:* origins. Do not set in production.
 
 # KV namespace for sessions, magic tokens, bookmarks, and rate-limit counters.
 # Create once in the Cloudflare dashboard (Workers & Pages → KV → Create

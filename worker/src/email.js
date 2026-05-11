@@ -1,4 +1,5 @@
 export async function sendMagicLink(env, { to, link }) {
+  const safeLink = escapeHtml(link);
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -15,7 +16,7 @@ export async function sendMagicLink(env, { to, link }) {
         `If you didn't request this, ignore this email.`,
       html:
         `<p>Click the link below to sign in. It expires in 10 minutes.</p>` +
-        `<p><a href="${link}">${link}</a></p>` +
+        `<p><a href="${safeLink}">${safeLink}</a></p>` +
         `<p style="color:#666;font-size:13px">If you didn't request this, ignore this email.</p>`,
     }),
   });
@@ -23,4 +24,10 @@ export async function sendMagicLink(env, { to, link }) {
     const body = await res.text().catch(() => '');
     throw new Error(`Resend ${res.status}: ${body.slice(0, 200)}`);
   }
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
 }
