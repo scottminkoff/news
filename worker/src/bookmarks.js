@@ -38,7 +38,7 @@ export async function handlePost(req, env) {
   if (!id || !url) return jsonError(400, 'missing id or url');
 
   const items = await loadList(env, session.email);
-  if (items.some(it => it.id === id || it.url === url)) {
+  if (items.some(it => it.id === id)) {
     return Response.json({ items });
   }
   if (items.length >= MAX_ITEMS) {
@@ -53,6 +53,7 @@ export async function handleDelete(req, env, id) {
   const session = await authenticate(req, env);
   if (!session) return jsonError(401, 'unauthorized');
   if (!id) return jsonError(400, 'missing id');
+  id = id.slice(0, 500);
 
   const items = await loadList(env, session.email);
   const next = items.filter(it => it.id !== id);
