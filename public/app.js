@@ -151,7 +151,13 @@ async function loadTier(tier) {
     state.tiers[tier] = await res.json();
     return state.tiers[tier].fetched;
   } catch (err) {
-    state.tiers[tier] = { error: err.message, items: [], sources: [] };
+    const prev = state.tiers[tier];
+    state.tiers[tier] = {
+      ...(prev || {}),
+      items: prev?.items || [],
+      sources: prev?.sources || [],
+      error: err.message,
+    };
     return null;
   }
 }
@@ -167,13 +173,13 @@ function renderTier(tier) {
   if (!data) return;
   container.innerHTML = '';
 
-  if (data.error) {
+  if (data.error && !(data.items && data.items.length)) {
     container.innerHTML = `<div class="error">Failed to load: ${escapeHtml(data.error)}</div>`;
     section.classList.remove('hidden');
     return;
   }
 
-  const items = filterItems(data.items);
+  const items = filterItems(data.items, tier);
   const filtersActive = state.filter || state.timeFilter || state.search;
 
   if (filtersActive && items.length === 0) {
@@ -208,23 +214,31 @@ function renderTier(tier) {
   }
 
   if (!filtersActive) {
+    const notes = [];
+    if (data.error) {
+      notes.push(`<span class="failed">Couldn't refresh: ${escapeHtml(data.error)}</span>`);
+    }
     const failed = (data.sources || []).filter(s => !s.ok);
     if (failed.length) {
+      notes.push(`<span class="failed">Failed: ${failed.map(f => escapeHtml(f.name)).join(', ')}</span>`);
+    }
+    if (notes.length) {
       const status = document.createElement('div');
       status.className = 'feed-status';
-      status.innerHTML = `<span class="failed">Failed: ${failed.map(f => escapeHtml(f.name)).join(', ')}</span>`;
+      status.innerHTML = notes.join(' · ');
       container.appendChild(status);
     }
   }
 }
 
-function filterItems(items) {
-  const cutoff = state.timeFilter
+function filterItems(items, tier) {
+  const skipSourceAndTime = tier === SAVED_TIER;
+  const cutoff = !skipSourceAndTime && state.timeFilter
     ? Date.now() - parseInt(state.timeFilter, 10) * 1000
     : null;
   const q = state.search.trim().toLowerCase();
   return items.filter(item => {
-    if (state.filter && item.source !== state.filter) return false;
+    if (!skipSourceAndTime && state.filter && item.source !== state.filter) return false;
     if (cutoff !== null) {
       if (!item.pubDate) return false;
       const t = new Date(item.pubDate).getTime();
