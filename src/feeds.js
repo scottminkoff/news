@@ -6,7 +6,7 @@ export const FEEDS = {
     { id: 'nyt_us',       name: 'NYT',          url: 'https://rss.nytimes.com/services/xml/rss/nyt/US.xml' },
     { id: 'axios',        name: 'Axios',        url: 'https://www.axios.com/feeds/feed.rss' },
     { id: 'politico',     name: 'Politico',     url: 'https://rss.politico.com/playbook.xml' },
-    { id: 'atlantic',     name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/all/' },
+    { id: 'atlantic_politics', name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/channel/politics/' },
     { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/news/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
     { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
   ],
@@ -30,6 +30,7 @@ export const FEEDS = {
     { id: 'marshall',     name: 'Josh Marshall',         url: 'https://talkingpointsmemo.com/edblog/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
     { id: 'nyt_sunday',   name: 'NYT Sunday Opinion',    url: 'https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml' },
     { id: 'browser',      name: 'The Browser',           url: 'https://kill-the-newsletter.com/feeds/blszn8836cs0kblerzr3.xml' },
+    { id: 'atlantic_ideas', name: 'The Atlantic',        url: 'https://www.theatlantic.com/feed/channel/ideas/' },
   ],
   israel: [
     { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/israel-and-the-region/feed/' },
@@ -38,5 +39,6 @@ export const FEEDS = {
   foreign: [
     { id: 'nyt_world',    name: 'NYT World',             url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
     { id: 'wsj_world',    name: 'WSJ World',             url: 'https://feeds.content.dowjones.io/public/rss/RSSWorldNews' },
+    { id: 'atlantic_international', name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/channel/international/' },
   ],
 };
