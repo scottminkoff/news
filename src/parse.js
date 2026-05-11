@@ -37,10 +37,23 @@ export function parseFeed(xml, feed) {
   const atom = data?.feed;
   const rawItems = channel?.item ?? atom?.entry ?? [];
   const arr = Array.isArray(rawItems) ? rawItems : [rawItems];
+  const needle = feed.include ? feed.include.toLowerCase() : null;
   return arr
+    .filter(item => !needle || matchesInclude(item, needle))
     .map(item => normalize(item, feed))
     .filter(i => i.title && i.link)
     .filter(i => !isJunkTitle(i.title));
+}
+
+function matchesInclude(item, needle) {
+  const fields = [
+    textOf(item.title),
+    textOf(item.description),
+    textOf(item.summary),
+    textOf(item['content:encoded']),
+    textOf(item.content),
+  ];
+  return fields.some(f => f && f.toLowerCase().includes(needle));
 }
 
 function isJunkTitle(title) {

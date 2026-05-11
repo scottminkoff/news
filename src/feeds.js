@@ -1,7 +1,8 @@
 // Feed registry. To override a URL at runtime (e.g. paid/token feeds),
 // set a Worker secret named FEED_URL_<ID_UPPERCASE>, e.g. FEED_URL_TPM.
 // Optional `include` field: case-insensitive substring; only items whose
-// title contains it are kept (used to subset a firehose feed).
+// title, description, or content body contains it are kept (used to
+// subset a firehose feed down to a particular column or topic).
 
 export const FEEDS = {
   national: [
