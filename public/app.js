@@ -407,9 +407,18 @@ function safeUrl(url, allowedProtocols) {
 }
 
 function sourceStyleAttr(name) {
-  const bg = SOURCE_COLORS[name];
-  if (!bg) return '';
+  if (!name) return '';
+  const bg = SOURCE_COLORS[name] || hashSourceColor(name);
   return ` style="background:${bg};color:${pickTextColor(bg)}"`;
+}
+
+function hashSourceColor(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  const r = 0x80 + (Math.abs(h)       % 0x60);
+  const g = 0x80 + (Math.abs(h >> 8)  % 0x60);
+  const b = 0x80 + (Math.abs(h >> 16) % 0x60);
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
 async function loadAll() {
