@@ -41,6 +41,7 @@ const TIME_FILTER_KEY = 'news.timeFilter';
 const ACTIVE_TIER_KEY = 'news.activeTier';
 const VISITED_KEY = 'news.visited';
 const BOOKMARKS_ONLY_KEY = 'news.bookmarksOnly';
+const ALL_ONLY_KEY = 'news.allOnly';
 const VISITED_LIMIT = 1000;
 
 const state = {
@@ -51,6 +52,7 @@ const state = {
   activeTier: RENDER_TIERS.includes(localStorage.getItem(ACTIVE_TIER_KEY)) ? localStorage.getItem(ACTIVE_TIER_KEY) : ALL_TIER,
   visited: loadVisited(),
   bookmarksOnly: localStorage.getItem(BOOKMARKS_ONLY_KEY) === '1',
+  allOnly: localStorage.getItem(ALL_ONLY_KEY) === '1',
 };
 
 function renderKeywordChips() {
@@ -561,19 +563,45 @@ document.addEventListener('keydown', e => {
 });
 
 const bookmarksViewBtn = document.getElementById('bookmarks-view-toggle');
+const allViewBtn = document.getElementById('all-view-toggle');
 function applyBookmarksView() {
   document.body.classList.toggle('bookmarks-only', state.bookmarksOnly);
   bookmarksViewBtn.classList.toggle('active', state.bookmarksOnly);
   bookmarksViewBtn.setAttribute('aria-pressed', String(state.bookmarksOnly));
 }
+function applyAllView() {
+  document.body.classList.toggle('all-only', state.allOnly);
+  allViewBtn.classList.toggle('active', state.allOnly);
+  allViewBtn.setAttribute('aria-pressed', String(state.allOnly));
+}
 bookmarksViewBtn.addEventListener('click', () => {
   state.bookmarksOnly = !state.bookmarksOnly;
-  if (state.bookmarksOnly) localStorage.setItem(BOOKMARKS_ONLY_KEY, '1');
-  else localStorage.removeItem(BOOKMARKS_ONLY_KEY);
+  if (state.bookmarksOnly) {
+    localStorage.setItem(BOOKMARKS_ONLY_KEY, '1');
+    state.allOnly = false;
+    localStorage.removeItem(ALL_ONLY_KEY);
+    applyAllView();
+  } else {
+    localStorage.removeItem(BOOKMARKS_ONLY_KEY);
+  }
   applyBookmarksView();
   if (state.bookmarksOnly) renderTier(SAVED_TIER);
 });
+allViewBtn.addEventListener('click', () => {
+  state.allOnly = !state.allOnly;
+  if (state.allOnly) {
+    localStorage.setItem(ALL_ONLY_KEY, '1');
+    state.bookmarksOnly = false;
+    localStorage.removeItem(BOOKMARKS_ONLY_KEY);
+    applyBookmarksView();
+  } else {
+    localStorage.removeItem(ALL_ONLY_KEY);
+  }
+  applyAllView();
+  if (state.allOnly) renderTier(ALL_TIER);
+});
 applyBookmarksView();
+applyAllView();
 
 document.getElementById('signin-open').addEventListener('click', openSignIn);
 document.getElementById('signout').addEventListener('click', () => {

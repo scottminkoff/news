@@ -182,6 +182,13 @@ body.bookmarks-only main > .tier[data-tier="saved"] {
   grid-row: 1 / -1;
 }
 
+body.all-only main > .tier { display: none; }
+body.all-only main > .tier[data-tier="all"] {
+  display: flex;
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+
 .tier {
   display: flex;
   flex-direction: column;
@@ -334,7 +341,8 @@ body.bookmarks-only main > .tier[data-tier="saved"] {
     font-size: 0.95rem;
     line-height: 1.342;
   }
-  #bookmarks-view-toggle { display: none; }
+  #bookmarks-view-toggle,
+  #all-view-toggle { display: none; }
 
   .auth-status { font-size: 0.78rem; gap: 0.25rem; }
   .auth-status .auth-link { padding: 0.3rem 0.45rem; }
@@ -480,7 +488,8 @@ body.bookmarks-only main > .tier[data-tier="saved"] {
 .auth-status .auth-signed-in { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-dim); }
 .auth-status #auth-email { font-size: 0.78rem; }
 
-#bookmarks-view-toggle {
+#bookmarks-view-toggle,
+#all-view-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -494,15 +503,20 @@ body.bookmarks-only main > .tier[data-tier="saved"] {
   cursor: pointer;
   font-family: inherit;
 }
-#bookmarks-view-toggle:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--text); }
-#bookmarks-view-toggle.active {
+#bookmarks-view-toggle:hover,
+#all-view-toggle:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--text); }
+#bookmarks-view-toggle.active,
+#all-view-toggle.active {
   background: var(--text);
   color: var(--bg);
   border-color: var(--text);
 }
-#bookmarks-view-toggle.active:hover { background: var(--text); color: var(--bg); }
-#bookmarks-view-toggle img { display: block; }
-#bookmarks-view-toggle.active img { filter: invert(1); }
+#bookmarks-view-toggle.active:hover,
+#all-view-toggle.active:hover { background: var(--text); color: var(--bg); }
+#bookmarks-view-toggle img,
+#all-view-toggle img { display: block; }
+#bookmarks-view-toggle.active img,
+#all-view-toggle.active img { filter: invert(1); }
 
 .bookmark-btn {
   position: absolute;
