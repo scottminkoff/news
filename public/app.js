@@ -23,6 +23,7 @@ const SOURCE_COLORS = {
   'David French':         '#A8B59A',
   'Josh Marshall':        '#8FA8C2',
   'NYT Sunday Opinion':   '#7E8FB5',
+  'The Browser':          '#6B4423',
 };
 
 function pickTextColor(hex) {
