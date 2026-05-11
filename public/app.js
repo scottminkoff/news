@@ -362,6 +362,16 @@ function timeAgo(date) {
   return date.toLocaleDateString();
 }
 
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+window.showToast = function (msg, { duration = 4000 } = {}) {
+  if (!toastEl) return;
+  toastEl.textContent = msg;
+  toastEl.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toastEl.hidden = true; }, duration);
+};
+
 function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
