@@ -1,5 +1,7 @@
 // Feed registry. To override a URL at runtime (e.g. paid/token feeds),
 // set a Worker secret named FEED_URL_<ID_UPPERCASE>, e.g. FEED_URL_TPM.
+// Optional `include` field: case-insensitive substring; only items whose
+// title contains it are kept (used to subset a firehose feed).
 
 export const FEEDS = {
   national: [
@@ -31,6 +33,7 @@ export const FEEDS = {
     { id: 'nyt_sunday',   name: 'NYT Sunday Opinion',    url: 'https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml' },
     { id: 'browser',      name: 'The Browser',           url: 'https://kill-the-newsletter.com/feeds/blszn8836cs0kblerzr3.xml' },
     { id: 'atlantic_ideas', name: 'The Atlantic',        url: 'https://www.theatlantic.com/feed/channel/ideas/' },
+    { id: 'bulwark_triad',  name: 'Jonathan V. Last',    url: 'https://www.thebulwark.com/feed', include: 'The Triad' },
   ],
   israel: [
     { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/israel-and-the-region/feed/' },

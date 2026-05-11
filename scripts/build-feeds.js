@@ -32,7 +32,12 @@ async function fetchFeed(feed) {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const xml = await res.text();
-    return parseFeed(xml, feed);
+    const items = parseFeed(xml, feed);
+    if (feed.include) {
+      const needle = feed.include.toLowerCase();
+      return items.filter(it => (it.title || '').toLowerCase().includes(needle));
+    }
+    return items;
   } finally {
     clearTimeout(timer);
   }
