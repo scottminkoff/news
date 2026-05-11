@@ -1,11 +1,13 @@
 name: Build and deploy feeds
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
   push:
     branches: [main]
+  # Scheduled runs are triggered by a Cloudflare Worker cron that fires
+  # workflow_dispatch every 5 minutes - GitHub's own schedule: trigger
+  # slipped by 15-60 minutes during busy periods. See
+  # docs/cron-cloudflare-trigger.md for the full setup.
 
 permissions:
   contents: read

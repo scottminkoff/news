@@ -18,3 +18,9 @@ FROM_EMAIL = "onboarding@resend.dev"
 binding = "BOOKMARKS_KV"
 id = "50fcbf91143e463d80ff8c5ef4e8d628"
 preview_id = "50fcbf91143e463d80ff8c5ef4e8d628"
+
+# Cron trigger: poke the GitHub Actions build workflow on schedule.
+# Cloudflare Worker cron is reliable to the minute; GitHub's own
+# schedule: trigger routinely slips by 15-60 minutes on free runners.
+[triggers]
+crons = ["*/5 * * * *"]

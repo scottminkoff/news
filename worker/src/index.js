@@ -1,7 +1,14 @@
 import { handleRequestLink, handleVerify } from './auth.js';
 import { handleGet, handlePost, handleDelete } from './bookmarks.js';
+import { dispatchBuild } from './github.js';
 
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(
+      dispatchBuild(env).catch(err => console.error('build dispatch failed', err)),
+    );
+  },
+
   async fetch(req, env) {
     const cors = corsHeaders(req, env);
 
