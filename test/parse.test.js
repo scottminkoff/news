@@ -245,6 +245,39 @@ test('Index/archive pages with " - Page N" titles are filtered out', () => {
   assert.deepEqual(items.map(i => i.title), ['Real article headline', 'Another real story']);
 });
 
+test('Forwarded/reply prefixes are stripped from titles', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item><title>Fwd: The Sunday Supplement</title><link>https://example.com/a</link></item>
+        <item><title>Re: Fwd: Re: Quick update</title><link>https://example.com/b</link></item>
+        <item><title>FW: Heads up</title><link>https://example.com/c</link></item>
+        <item><title>Refund policy</title><link>https://example.com/d</link></item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.deepEqual(items.map(i => i.title), [
+    'The Sunday Supplement',
+    'Quick update',
+    'Heads up',
+    'Refund policy',
+  ]);
+});
+
+test('Gmail Forwarding Confirmation emails are filtered out', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item><title>Real article</title><link>https://example.com/a</link></item>
+        <item><title>(Gmail Forwarding Confirmation - Receive Mail from foo@bar.com</title><link>https://example.com/b</link></item>
+        <item><title>Gmail Forwarding Confirmation - Receive Mail</title><link>https://example.com/c</link></item>
+        <item><title>Fwd: (Gmail Forwarding Confirmation - Receive Mail</title><link>https://example.com/d</link></item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, FEED);
+  assert.deepEqual(items.map(i => i.title), ['Real article']);
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);

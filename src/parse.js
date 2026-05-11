@@ -44,7 +44,9 @@ export function parseFeed(xml, feed) {
 }
 
 function isJunkTitle(title) {
-  return / - Page \d+$/i.test(title);
+  if (/ - Page \d+$/i.test(title)) return true;
+  if (/^\(?Gmail Forwarding Confirmation\b/i.test(title)) return true;
+  return false;
 }
 
 export function normalize(item, feed) {
@@ -57,7 +59,7 @@ export function normalize(item, feed) {
     if (!isNaN(d.getTime())) pubDate = d.toISOString();
   }
   const rawDesc = item.description ?? item.summary ?? item['content:encoded'] ?? '';
-  const cleanTitle = stripSourceSuffix(cleanText(title), feed.name);
+  const cleanTitle = stripReplyPrefixes(stripSourceSuffix(cleanText(title), feed.name));
   let description = stripHtml(textOf(rawDesc));
   if (isRedundantDescription(description, cleanTitle, feed.name)) description = '';
   description = description.slice(0, 280);
@@ -120,6 +122,10 @@ function cleanText(s) {
 function stripSourceSuffix(title, sourceName) {
   const suffix = ` - ${sourceName}`;
   return title.endsWith(suffix) ? title.slice(0, -suffix.length).trimEnd() : title;
+}
+
+function stripReplyPrefixes(title) {
+  return title.replace(/^(?:\s*(?:fwd|fw|re)\s*:\s*)+/i, '').trim();
 }
 
 function isRedundantDescription(desc, title, sourceName) {
