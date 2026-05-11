@@ -278,6 +278,40 @@ test('Gmail Forwarding Confirmation emails are filtered out', () => {
   assert.deepEqual(items.map(i => i.title), ['Real article']);
 });
 
+test('feed.include filters items by title, description, or content body', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+      <channel>
+        <item>
+          <title>The Triad: A short note</title>
+          <link>https://example.com/a</link>
+        </item>
+        <item>
+          <title>Random Bulwark essay</title>
+          <link>https://example.com/b</link>
+          <description>Body mentioning The Triad in passing.</description>
+        </item>
+        <item>
+          <title>Unrelated piece</title>
+          <link>https://example.com/c</link>
+          <description>Nothing here</description>
+          <content:encoded><![CDATA[<p>Deep in the content: the triad is named.</p>]]></content:encoded>
+        </item>
+        <item>
+          <title>Totally off-topic</title>
+          <link>https://example.com/d</link>
+          <description>Something else entirely.</description>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'fixture', name: 'Fixture', include: 'The Triad' });
+  assert.deepEqual(items.map(i => i.title), [
+    'The Triad: A short note',
+    'Random Bulwark essay',
+    'Unrelated piece',
+  ]);
+});
+
 test('Empty channel returns empty array', () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title></channel></rss>`;
   const items = parseFeed(xml, FEED);
