@@ -341,8 +341,8 @@ body.all-only main > .tier[data-tier="all"] {
     font-size: 0.95rem;
     line-height: 1.342;
   }
-  #bookmarks-view-toggle,
-  #all-view-toggle { display: none; }
+  .header-right #bookmarks-view-toggle,
+  .header-right #all-view-toggle { display: none; }
 
   .auth-status { font-size: 0.78rem; gap: 0.25rem; }
   .auth-status .auth-link { padding: 0.3rem 0.45rem; }
