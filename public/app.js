@@ -4,7 +4,7 @@ const SOURCE_COLORS = {
   'NYT':                  '#586994',
   'New Yorker':           '#7D869C',
   'Axios':                '#A2ABAB',
-  'TPM':                  '#B4C4AE',
+  'TPM':                  '#961515',
   'Capital Confidential': '#E5E8B6',
   'Politico':             '#967D69',
   'Times Union':          '#92B9BD',
@@ -21,7 +21,6 @@ const SOURCE_COLORS = {
   'Boiling Frogs':        '#9DB58E',
   'Jamelle Bouie':        '#9D90BC',
   'David French':         '#A8B59A',
-  'Josh Marshall':        '#8FA8C2',
   'NYT Sunday Opinion':   '#7E8FB5',
   'The Browser':          '#6B4423',
 };
