@@ -1,28 +1,29 @@
 const KEYWORDS = ['Budget', 'Charter', 'Districting', 'Hochul', 'Kingston', 'New Paltz', 'Ulster County'];
 
 const SOURCE_COLORS = {
-  'NYT':                  '#586994',
-  'New Yorker':           '#7D869C',
-  'Axios':                '#A2ABAB',
-  'TPM':                  '#961515',
-  'Capital Confidential': '#E5E8B6',
-  'Politico':             '#967D69',
-  'Times Union':          '#92B9BD',
-  'Hudson Valley One':    '#A8D4AD',
-  'City & State':         '#F2F79E',
-  'NY State of Politics': '#7ADFBB',
-  'The Atlantic':         '#BEB0A7',
-  'Daily Freeman':        '#C8A8C0',
-  'Times of Israel':      '#D4B896',
-  'The Forward':          '#9FB5C3',
-  'NYT World':            '#6B7BA8',
-  'WSJ World':            '#C9B6A8',
-  'Jonah Goldberg':       '#BFA890',
-  'Boiling Frogs':        '#9DB58E',
-  'Jamelle Bouie':        '#9D90BC',
-  'David French':         '#A8B59A',
-  'NYT Sunday Opinion':   '#7E8FB5',
-  'The Browser':          '#6B4423',
+  'NYT':                  { bg: '#544F4F', text: '#FFFFFF' },
+  'New Yorker':           { bg: '#FFFFFF', text: '#000000' },
+  'Axios':                { bg: '#4F69DB', text: '#FFFFFF' },
+  'TPM':                  { bg: '#961515', text: '#FFFFFF' },
+  'Capital Confidential': { bg: '#00497e', text: '#FFFFFF' },
+  'Politico':             { bg: '#d71920', text: '#FFFFFF' },
+  'Times Union':          { bg: '#53bce3', text: '#000000' },
+  'Hudson Valley One':    { bg: '#ff6600', text: '#000000' },
+  'City & State':         { bg: '#005aab', text: '#ca1925' },
+  'NY State of Politics': { bg: '#9C14C9', text: '#FFFFFF' },
+  'The Atlantic':         { bg: '#FFFFFF', text: '#e7131a' },
+  'Daily Freeman':        { bg: '#fafafa', text: '#000000' },
+  'Times of Israel':      { bg: '#0e4f97', text: '#FFFFFF' },
+  'The Forward':          { bg: '#da9e0a', text: '#FFFFFF' },
+  'NYT World':            { bg: '#544F4F', text: '#FFFFFF' },
+  'WSJ World':            { bg: '#FFE6BD', text: '#000000' },
+  'Jonah Goldberg':       { bg: '#f4efeb', text: '#d1221f' },
+  'Boiling Frogs':        { bg: '#f4efeb', text: '#d1221f' },
+  'Jamelle Bouie':        { bg: '#544F4F', text: '#FFFFFF' },
+  'David French':         { bg: '#544F4F', text: '#FFFFFF' },
+  'NYT Sunday Opinion':   { bg: '#544F4F', text: '#FFFFFF' },
+  'The Browser':          { bg: '#ebcd68', text: '#b67f2e' },
+  'Jonathan V. Last':     { bg: '#000000', text: '#d0021b' },
 };
 
 function pickTextColor(hex) {
@@ -409,8 +410,10 @@ function safeUrl(url, allowedProtocols) {
 
 function sourceStyleAttr(name) {
   if (!name) return '';
-  const bg = SOURCE_COLORS[name] || hashSourceColor(name);
-  return ` style="background:${bg};color:${pickTextColor(bg)}"`;
+  const curated = SOURCE_COLORS[name];
+  const bg = curated?.bg || hashSourceColor(name);
+  const text = curated?.text || pickTextColor(bg);
+  return ` style="background:${bg};color:${text}"`;
 }
 
 function hashSourceColor(name) {

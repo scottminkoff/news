@@ -448,6 +448,7 @@ body.all-only main > .tier[data-tier="all"] {
   background: var(--accent);
   color: var(--accent-text);
   padding: 0.18rem 0.55rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   font-weight: 500;
   font-size: 0.72rem;
