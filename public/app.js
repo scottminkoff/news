@@ -8,8 +8,8 @@ const SOURCE_COLORS = {
   'Capital Confidential': { bg: '#00497e', text: '#FFFFFF' },
   'Politico':             { bg: '#d71920', text: '#FFFFFF' },
   'Times Union':          { bg: '#53bce3', text: '#000000' },
-  'Hudson Valley One':    { bg: '#ff6600', text: '#000000' },
-  'City & State':         { bg: '#005aab', text: '#ca1925' },
+  'Hudson Valley One':    { bg: '#ff6600', text: '#FFFFFF' },
+  'City & State':         { bg: '#005aab', text: '#FFCABA' },
   'NY State of Politics': { bg: '#9C14C9', text: '#FFFFFF' },
   'The Atlantic':         { bg: '#FFFFFF', text: '#e7131a' },
   'Daily Freeman':        { bg: '#fafafa', text: '#000000' },
@@ -22,7 +22,7 @@ const SOURCE_COLORS = {
   'Jamelle Bouie':        { bg: '#544F4F', text: '#FFFFFF' },
   'David French':         { bg: '#544F4F', text: '#FFFFFF' },
   'NYT Sunday Opinion':   { bg: '#544F4F', text: '#FFFFFF' },
-  'The Browser':          { bg: '#ebcd68', text: '#b67f2e' },
+  'The Browser':          { bg: '#FFF1DB', text: '#6B4B07' },
   'Jonathan V. Last':     { bg: '#000000', text: '#d0021b' },
 };
 
