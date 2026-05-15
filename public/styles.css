@@ -454,6 +454,25 @@ body.all-only main > .tier[data-tier="all"] {
   font-size: 0.72rem;
 }
 
+.card-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.source-extra {
+  padding: 0.13rem 0.42rem;
+  font-size: 0.66rem;
+}
+
+.card-time {
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+  white-space: nowrap;
+}
+
 .loading, .error, .empty {
   padding: 1.5rem;
   color: var(--text-faint);
