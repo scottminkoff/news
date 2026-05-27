@@ -46,6 +46,7 @@ const VISITED_LIMIT = 1000;
 
 const state = {
   tiers: {},
+  allData: null,
   filter: localStorage.getItem(FILTER_KEY) || '',
   timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
   search: '',
@@ -89,6 +90,85 @@ function applyActiveTier() {
   }
 }
 
+// --- cross-source story clustering (used by the "All" view) ---
+const CLUSTER_SIMILARITY = 0.6;
+const CLUSTER_TIME_WINDOW_MS = 2 * 24 * 60 * 60 * 1000;
+const CLUSTER_STOPWORDS = new Set(
+  ('the a an of in on to for and or but at by with as is are was were be been from ' +
+   'that this it its he she his her they their them you your we our us new says said ' +
+   'report over after before amid into out about how why what when who will would')
+    .split(' '),
+);
+
+function titleTokens(title) {
+  const set = new Set();
+  for (const w of String(title || '')
+    .toLowerCase()
+    .replace(/[‘’'`]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(' ')) {
+    if (w.length > 2 && !CLUSTER_STOPWORDS.has(w)) set.add(w);
+  }
+  return set;
+}
+
+function jaccard(a, b) {
+  if (!a.size || !b.size) return 0;
+  const [small, large] = a.size <= b.size ? [a, b] : [b, a];
+  let inter = 0;
+  for (const t of small) if (large.has(t)) inter++;
+  return inter / (a.size + b.size - inter);
+}
+
+function itemTime(item) {
+  if (!item.pubDate) return NaN;
+  const t = new Date(item.pubDate).getTime();
+  return Number.isFinite(t) ? t : NaN;
+}
+
+// Greedy clustering: items must be pre-sorted newest-first. Each item joins
+// the most similar existing cluster above CLUSTER_SIMILARITY, else starts its
+// own. Comparison anchors to each cluster's representative (its newest item)
+// to keep merges conservative; an inverted token index keeps lookups cheap.
+function clusterItems(items) {
+  const tokens = items.map(it => titleTokens(it.title));
+  const times = items.map(itemTime);
+  const tokenIndex = new Map();   // token -> Set of cluster indices
+  const clusters = [];            // { members: [i...], repTokens, repTime }
+
+  for (let i = 0; i < items.length; i++) {
+    const tk = tokens[i];
+    const candidates = new Set();
+    for (const tok of tk) {
+      const bucket = tokenIndex.get(tok);
+      if (bucket) for (const c of bucket) candidates.add(c);
+    }
+    let best = -1;
+    let bestScore = CLUSTER_SIMILARITY;
+    for (const c of candidates) {
+      const cl = clusters[c];
+      if (Number.isFinite(cl.repTime) && Number.isFinite(times[i]) &&
+          cl.repTime - times[i] > CLUSTER_TIME_WINDOW_MS) continue;
+      const score = jaccard(tk, cl.repTokens);
+      if (score >= bestScore) { bestScore = score; best = c; }
+    }
+    let cIdx;
+    if (best >= 0) {
+      clusters[best].members.push(i);
+      cIdx = best;
+    } else {
+      cIdx = clusters.length;
+      clusters.push({ members: [i], repTokens: tk, repTime: times[i] });
+    }
+    for (const tok of tk) {
+      let bucket = tokenIndex.get(tok);
+      if (!bucket) tokenIndex.set(tok, bucket = new Set());
+      bucket.add(cIdx);
+    }
+  }
+  return clusters.map(cl => cl.members.map(i => items[i]));
+}
+
 function aggregatedAll() {
   const items = [];
   const sources = [];
@@ -107,7 +187,18 @@ function aggregatedAll() {
     }
   }
   items.sort((a, b) => (b.pubDate || '').localeCompare(a.pubDate || ''));
-  return { items, sources };
+  const clustered = clusterItems(items).map(group => {
+    const primary = group[0];
+    if (group.length === 1) return primary;
+    const extra = [];
+    const seenSrc = new Set([primary.source]);
+    for (let k = 1; k < group.length; k++) {
+      const s = group[k].source;
+      if (s && !seenSrc.has(s)) { seenSrc.add(s); extra.push(s); }
+    }
+    return extra.length ? { ...primary, clusterSources: extra } : primary;
+  });
+  return { items: clustered, sources };
 }
 
 function aggregatedSaved() {
@@ -169,7 +260,7 @@ function renderTier(tier) {
   if (!section) return;
   const container = section.querySelector('.feed');
   let data;
-  if (tier === ALL_TIER) data = aggregatedAll();
+  if (tier === ALL_TIER) data = state.allData || aggregatedAll();
   else if (tier === SAVED_TIER) data = aggregatedSaved();
   else data = state.tiers[tier];
   if (!data) return;
@@ -240,14 +331,16 @@ function filterItems(items, tier) {
     : null;
   const q = state.search.trim().toLowerCase();
   return items.filter(item => {
-    if (!skipSourceAndTime && state.filter && item.source !== state.filter) return false;
+    if (!skipSourceAndTime && state.filter &&
+        item.source !== state.filter &&
+        !(item.clusterSources && item.clusterSources.includes(state.filter))) return false;
     if (cutoff !== null) {
       if (!item.pubDate) return false;
       const t = new Date(item.pubDate).getTime();
       if (!Number.isFinite(t) || t < cutoff) return false;
     }
     if (q) {
-      const hay = `${item.title} ${item.description || ''} ${item.source}`.toLowerCase();
+      const hay = `${item.title} ${item.description || ''} ${item.source} ${(item.clusterSources || []).join(' ')}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -299,14 +392,21 @@ function renderCard(item) {
   });
 
   const ago = item.pubDate ? timeAgo(new Date(item.pubDate)) : '';
+  const pubAttr = item.pubDate ? ` data-pub="${escapeAttr(item.pubDate)}"` : '';
+  const extraChips = (item.clusterSources || [])
+    .map(s => `<span class="source source-extra"${sourceStyleAttr(s)}>${escapeHtml(s)}</span>`)
+    .join('');
 
   a.innerHTML = `
     <div class="card-body">
       <h3>${escapeHtml(item.title)}</h3>
       ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
       <div class="card-meta">
-        <span class="source"${sourceStyleAttr(item.source)}>${escapeHtml(item.source)}</span>
-        <span>${ago}</span>
+        <span class="card-sources">
+          <span class="source"${sourceStyleAttr(item.source)}>${escapeHtml(item.source)}</span>
+          ${extraChips}
+        </span>
+        <span class="card-time"${pubAttr}>${ago}</span>
       </div>
     </div>`;
 
@@ -378,6 +478,14 @@ function timeAgo(date) {
   return date.toLocaleDateString();
 }
 
+function updateTimestamps() {
+  for (const el of document.querySelectorAll('.card-time[data-pub]')) {
+    const d = new Date(el.dataset.pub);
+    if (Number.isFinite(d.getTime())) el.textContent = timeAgo(d);
+  }
+}
+setInterval(updateTimestamps, 60_000);
+
 const toastEl = document.getElementById('toast');
 let toastTimer = null;
 window.showToast = function (msg, { duration = 4000 } = {}) {
@@ -437,6 +545,7 @@ async function loadAll() {
   }
 
   const fetchedTimes = await Promise.all(TIERS.map(loadTier));
+  state.allData = aggregatedAll();
   populateFilter();
   applyFilter();
 
