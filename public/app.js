@@ -9,6 +9,7 @@ const SOURCE_COLORS = {
   'Politico':             { bg: '#d71920', text: '#FFFFFF' },
   'Times Union':          { bg: '#53bce3', text: '#000000' },
   'Hudson Valley One':    { bg: '#ff6600', text: '#FFFFFF' },
+  'Mid Hudson News':      { bg: '#0299E2', text: '#E24B02' },
   'City & State':         { bg: '#005aab', text: '#FFCABA' },
   'NY State of Politics': { bg: '#9C14C9', text: '#FFFFFF' },
   'The Atlantic':         { bg: '#FFFFFF', text: '#e7131a' },
