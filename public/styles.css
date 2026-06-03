@@ -46,6 +46,7 @@ header {
   width: auto;
   display: block;
   margin-right: auto;
+  cursor: pointer;
 }
 
 .header-right {

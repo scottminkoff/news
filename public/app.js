@@ -564,6 +564,17 @@ async function loadAll() {
   btn.disabled = false;
 }
 
+const logoEl = document.querySelector('.logo');
+if (logoEl) {
+  logoEl.addEventListener('click', () => document.getElementById('refresh').click());
+  logoEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      document.getElementById('refresh').click();
+    }
+  });
+}
+
 document.getElementById('refresh').addEventListener('click', () => {
   clearTimeout(searchTimer);
   state.search = '';
