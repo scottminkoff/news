@@ -54,9 +54,16 @@ function pickTextColor(hex) {
 
 const FILTER_KEY = 'newslite.sourceFilter';
 const TIME_FILTER_KEY = 'newslite.timeFilter';
-const BOOKMARKS_ONLY_KEY = 'newslite.bookmarksOnly';
+const VIEW_KEY = 'newslite.view';
 const VISITED_KEY = 'news.visited'; // shared with the main page
 const VISITED_LIMIT = 1000;
+
+// View modes:
+//   'columns' — the three combined columns (default)
+//   'all'     — a single combined feed of everything (the "All" button)
+//   'saved'   — the columns filtered to bookmarked items (the "Bookmarks" button)
+const VIEWS = ['columns', 'all', 'saved'];
+const ALL_GROUP = { id: 'all', tiers: TIERS };
 
 const state = {
   tiers: {},
@@ -64,7 +71,7 @@ const state = {
   timeFilter: localStorage.getItem(TIME_FILTER_KEY) || '',
   search: '',
   visited: loadVisited(),
-  bookmarksOnly: localStorage.getItem(BOOKMARKS_ONLY_KEY) === '1',
+  view: VIEWS.includes(localStorage.getItem(VIEW_KEY)) ? localStorage.getItem(VIEW_KEY) : 'columns',
 };
 
 // --- combine tiers into a group -------------------------------------------
@@ -168,7 +175,7 @@ function filterItems(items) {
     : null;
   const q = state.search.trim().toLowerCase();
   return items.filter(item => {
-    if (state.bookmarksOnly &&
+    if (state.view === 'saved' &&
         !window.Bookmarks.isBookmarked(window.Bookmarks.idFor(item))) return false;
     if (state.filter && item.source !== state.filter) return false;
     if (cutoff !== null) {
@@ -199,7 +206,7 @@ function renderGroup(group) {
   const items = filterItems(data.items);
 
   if (!items.length) {
-    if (state.bookmarksOnly) {
+    if (state.view === 'saved') {
       container.innerHTML = window.Auth.isSignedIn()
         ? '<div class="empty">No saved items in this section.</div>'
         : '<div class="empty">Sign in to save and view bookmarks.</div>';
@@ -224,7 +231,7 @@ function renderGroup(group) {
   container.appendChild(frag);
 
   const failed = (data.sources || []).filter(s => !s.ok);
-  if (failed.length && !state.bookmarksOnly) {
+  if (failed.length && state.view !== 'saved') {
     const status = document.createElement('div');
     status.className = 'feed-status';
     status.innerHTML = `<span class="failed">Failed: ${failed.map(f => escapeHtml(f.name)).join(', ')}</span>`;
@@ -466,7 +473,12 @@ function updateChipsActiveState() {
 // --- render + load ---------------------------------------------------------
 
 function renderAll() {
-  for (const group of GROUPS) renderGroup(group);
+  document.body.classList.toggle('view-all', state.view === 'all');
+  if (state.view === 'all') {
+    renderGroup(ALL_GROUP);
+  } else {
+    for (const group of GROUPS) renderGroup(group);
+  }
 }
 
 async function loadAll() {
@@ -572,28 +584,29 @@ searchEl.addEventListener('keydown', e => {
 renderKeywordChips();
 updateChipsActiveState();
 
-// All / Bookmarks are a mutually exclusive pair here: All = every item,
-// Bookmarks = only saved items across the three columns.
+// All / Bookmarks toggle between three views (see VIEWS above): the default
+// three columns, a single combined "All" feed, or the columns filtered to
+// saved items. Clicking the active button returns to the default columns.
 const bookmarksViewBtn = document.getElementById('bookmarks-view-toggle');
 const allViewBtn = document.getElementById('all-view-toggle');
 
 function applyViewToggle() {
-  bookmarksViewBtn.classList.toggle('active', state.bookmarksOnly);
-  bookmarksViewBtn.setAttribute('aria-pressed', String(state.bookmarksOnly));
-  allViewBtn.classList.toggle('active', !state.bookmarksOnly);
-  allViewBtn.setAttribute('aria-pressed', String(!state.bookmarksOnly));
+  allViewBtn.classList.toggle('active', state.view === 'all');
+  allViewBtn.setAttribute('aria-pressed', String(state.view === 'all'));
+  bookmarksViewBtn.classList.toggle('active', state.view === 'saved');
+  bookmarksViewBtn.setAttribute('aria-pressed', String(state.view === 'saved'));
 }
 
-function setBookmarksOnly(on) {
-  state.bookmarksOnly = on;
-  if (on) localStorage.setItem(BOOKMARKS_ONLY_KEY, '1');
-  else localStorage.removeItem(BOOKMARKS_ONLY_KEY);
+function setView(view) {
+  state.view = state.view === view ? 'columns' : view;
+  if (state.view === 'columns') localStorage.removeItem(VIEW_KEY);
+  else localStorage.setItem(VIEW_KEY, state.view);
   applyViewToggle();
   renderAll();
 }
 
-bookmarksViewBtn.addEventListener('click', () => setBookmarksOnly(true));
-allViewBtn.addEventListener('click', () => setBookmarksOnly(false));
+allViewBtn.addEventListener('click', () => setView('all'));
+bookmarksViewBtn.addEventListener('click', () => setView('saved'));
 applyViewToggle();
 
 // --- auth + bookmarks UI ---------------------------------------------------
