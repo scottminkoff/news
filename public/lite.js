@@ -16,8 +16,6 @@ const GROUPS = [
 // before the newest-first sort).
 const TIERS = ['national', 'opinion', 'state', 'local', 'israel', 'foreign'];
 
-const KEYWORDS = ['Budget', 'Charter', 'Districting', 'Hochul', 'Kingston', 'New Paltz', 'Tax', 'Ulster County'];
-
 const SOURCE_COLORS = {
   'NYT':                  { bg: '#544F4F', text: '#FFFFFF' },
   'New Yorker':           { bg: '#FFFFFF', text: '#000000' },
@@ -444,32 +442,6 @@ function hashSourceColor(name) {
   return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
-// --- keyword chips ---------------------------------------------------------
-
-function renderKeywordChips() {
-  const container = document.querySelector('.keyword-chips');
-  container.innerHTML = KEYWORDS
-    .map(k => `<button type="button" data-keyword="${escapeAttr(k)}">${escapeHtml(k)}</button>`)
-    .join('');
-  for (const btn of container.querySelectorAll('button')) {
-    btn.addEventListener('click', () => {
-      const kw = btn.dataset.keyword;
-      const isActive = state.search.toLowerCase() === kw.toLowerCase();
-      state.search = isActive ? '' : kw;
-      searchEl.value = state.search;
-      updateChipsActiveState();
-      renderAll();
-    });
-  }
-}
-
-function updateChipsActiveState() {
-  const cur = state.search.toLowerCase();
-  for (const btn of document.querySelectorAll('.keyword-chips button')) {
-    btn.classList.toggle('active', btn.dataset.keyword.toLowerCase() === cur);
-  }
-}
-
 // --- render + load ---------------------------------------------------------
 
 function renderAll() {
@@ -535,7 +507,6 @@ document.getElementById('refresh').addEventListener('click', () => {
   localStorage.removeItem(FILTER_KEY);
   syncSourceControls();
   document.body.classList.remove('search-open');
-  updateChipsActiveState();
   loadAll();
 });
 
@@ -563,7 +534,6 @@ searchEl.addEventListener('input', e => {
   const v = e.target.value;
   searchTimer = setTimeout(() => {
     state.search = v;
-    updateChipsActiveState();
     renderAll();
   }, 120);
 });
@@ -574,15 +544,11 @@ searchEl.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     searchEl.value = '';
     state.search = '';
-    updateChipsActiveState();
     renderAll();
     document.body.classList.remove('search-open');
     searchEl.blur();
   }
 });
-
-renderKeywordChips();
-updateChipsActiveState();
 
 // All / Bookmarks toggle between three views (see VIEWS above): the default
 // three columns, a single combined "All" feed, or the columns filtered to
