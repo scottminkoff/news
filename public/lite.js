@@ -318,7 +318,7 @@ function populateSources() {
     sorted.map(n => `<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`).join('');
 
   sourcePillsEl.innerHTML = sorted.map(n =>
-    `<button type="button" class="source-pill" data-source="${escapeAttr(n)}"${sourceStyleAttr(n)}>${escapeHtml(n)}</button>`
+    `<button type="button" class="source-pill" data-source="${escapeAttr(n)}"${pillColorVar(n)}>${escapeHtml(n)}</button>`
   ).join('');
 
   // Drop a stale filter whose source is no longer present.
@@ -417,6 +417,15 @@ function sourceStyleAttr(name) {
   const bg = curated?.bg || hashSourceColor(name);
   const text = curated?.text || pickTextColor(bg);
   return ` style="background:${bg};color:${text}"`;
+}
+
+// Source pills carry the brand color only as a small dot (see .source-pill
+// in lite.css), so they expose the color as a CSS var rather than a fill.
+function pillColorVar(name) {
+  if (!name) return '';
+  const curated = SOURCE_COLORS[name];
+  const bg = curated?.bg || hashSourceColor(name);
+  return ` style="--pill-color:${bg}"`;
 }
 
 function hashSourceColor(name) {
