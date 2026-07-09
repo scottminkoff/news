@@ -4,8 +4,15 @@
 
 /* On wide screens, collapse the main page's 3x2 grid to a single row. */
 @media (min-width: 1101px) {
+  /* Shorter footprint: cap the columns so the block doesn't fill the whole
+     viewport height. The source bar sits just below the columns, leaving
+     empty space at the bottom (mirrors the side margins from the narrowing). */
   body.lite main {
-    grid-template-rows: 1fr;
+    flex: 0 0 auto;
+    grid-template-rows: auto;
+  }
+  body.lite .feed {
+    max-height: 62vh;
   }
 }
 
