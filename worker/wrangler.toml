@@ -22,5 +22,8 @@ preview_id = "50fcbf91143e463d80ff8c5ef4e8d628"
 # Cron trigger: poke the GitHub Actions build workflow on schedule.
 # Cloudflare Worker cron is reliable to the minute; GitHub's own
 # schedule: trigger routinely slips by 15-60 minutes on free runners.
+# Every 15 min: each build+Pages deploy can take several minutes, so a
+# tighter cadence just stacks deploys in the single "pages" concurrency
+# lane where they queue and cancel each other.
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/15 * * * *"]
