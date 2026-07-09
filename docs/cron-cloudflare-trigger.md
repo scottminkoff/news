@@ -44,7 +44,7 @@ Total time on your end: ~5 minutes.
 1. **`worker/wrangler.toml`** — add a cron trigger:
    ```toml
    [triggers]
-   crons = ["*/5 * * * *"]
+   crons = ["*/15 * * * *"]
    ```
 
 2. **`worker/src/github.js`** (new) — small module exporting
@@ -85,10 +85,10 @@ Total time on your end: ~5 minutes.
 - `cd worker && node --test test/*.test.js` — all green locally
 - Push to main → `Deploy worker` workflow runs and ships the new Worker
 - Cloudflare dashboard → Workers → news-api → Logs → watch for a
-  `scheduled` invocation within 5 minutes. Should see a successful
+  `scheduled` invocation within 15 minutes. Should see a successful
   GitHub API response (204).
 - GitHub Actions tab → Build and deploy feeds → should see new runs
-  arriving on the 5-minute marks, on time.
+  arriving on the 15-minute marks, on time.
 
 ### Rollback (if it misbehaves)
 

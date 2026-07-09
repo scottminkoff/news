@@ -12,33 +12,38 @@
 /* Roomier, less-packed spacing than the main page: wider column gutters,
    more air between cards, softer card chrome. All scoped to body.lite. */
 body.lite main {
-  gap: 2rem 3.5rem;
-  padding: 2.75rem 3rem 1.5rem;
+  gap: 2.5rem 4.5rem;
+  padding: 3.5rem 3.5rem 1.5rem;
 }
 body.lite .tier h2 {
-  margin-bottom: 2rem;
+  margin-bottom: 2.75rem;
 }
 body.lite .feed {
-  gap: 1.6rem;
+  gap: 2.6rem;
 }
 body.lite .feed-divider {
-  padding-top: 0.35rem;
-  margin-bottom: 0.15rem;
+  padding-top: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 body.lite .card {
-  padding: 1.35rem 1.4rem;
-  gap: 1.15rem;
-  border-radius: 12px;
+  padding: 1.75rem 1.85rem;
+  gap: 1.35rem;
+  border-radius: 14px;
+  border-color: var(--border);
   box-shadow: none;
 }
 body.lite .card:hover {
   box-shadow: var(--shadow-card-hover);
 }
 body.lite .card-body h3 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.65rem;
+  line-height: 1.4;
+}
+body.lite .card-body p {
+  line-height: 1.55;
 }
 body.lite .card-meta {
-  padding-top: 0.85rem;
+  padding-top: 1.15rem;
 }
 
 /* Bottom source-filter bar: sits below the columns and stays put while
