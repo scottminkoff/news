@@ -420,9 +420,8 @@ function safeUrl(url, allowedProtocols) {
 
 function sourceStyleAttr(name) {
   if (!name) return '';
-  const curated = SOURCE_COLORS[name];
-  const bg = curated?.bg || hashSourceColor(name);
-  const text = curated?.text || pickTextColor(bg);
+  const bg = brandColor(name);
+  const text = SOURCE_COLORS[name]?.text || pickTextColor(bg);
   return ` style="background:${bg};color:${text}"`;
 }
 
@@ -430,9 +429,24 @@ function sourceStyleAttr(name) {
 // in lite.css), so they expose the color as a CSS var rather than a fill.
 function pillColorVar(name) {
   if (!name) return '';
-  const curated = SOURCE_COLORS[name];
-  const bg = curated?.bg || hashSourceColor(name);
-  return ` style="--pill-color:${bg}"`;
+  return ` style="--pill-color:${brandColor(name)}"`;
+}
+
+// How much to lighten each publication's brand color (toward white) so the
+// banners and dots read a touch softer.
+const BRAND_LIGHTEN = 0.15;
+
+function brandColor(name) {
+  return lightenHex(SOURCE_COLORS[name]?.bg || hashSourceColor(name), BRAND_LIGHTEN);
+}
+
+function lightenHex(hex, amt) {
+  const n = hex.replace('#', '');
+  const r = parseInt(n.slice(0, 2), 16);
+  const g = parseInt(n.slice(2, 4), 16);
+  const b = parseInt(n.slice(4, 6), 16);
+  const mix = c => Math.round(c + (255 - c) * amt);
+  return '#' + [mix(r), mix(g), mix(b)].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
 function hashSourceColor(name) {
