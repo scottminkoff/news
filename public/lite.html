@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src * data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src 'self' https://news-api.sminkoff.workers.dev; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+  <title>Proximate Press · Lite</title>
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./lite.css" />
+</head>
+<body class="lite">
+  <header>
+    <img class="logo" src="./proximatepress.png" alt="Proximate Press" role="button" tabindex="0" title="Refresh" />
+    <div class="header-right">
+      <span id="updated" class="updated"></span>
+      <button id="search-toggle" type="button" aria-label="Search" title="Search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <input type="search" id="search" placeholder="Search" aria-label="Search items">
+      <select id="time-filter" aria-label="Filter by time">
+        <option value="">Any time</option>
+        <option value="3600">Past hour</option>
+        <option value="21600">Past 6 hours</option>
+        <option value="86400">Past 24 hours</option>
+        <option value="604800">Past week</option>
+      </select>
+      <select id="source-filter" aria-label="Filter by source">
+        <option value="">All sources</option>
+      </select>
+      <button id="all-view-toggle" type="button" aria-pressed="true" aria-label="Show all" title="All">
+        <img src="./allsym.svg" alt="" width="14" height="14"><span class="all-label">All</span>
+      </button>
+      <button id="bookmarks-view-toggle" type="button" aria-pressed="false" aria-label="Show bookmarks" title="Bookmarks">
+        <img src="./bookmark-ui-svgrepo-com.svg" alt="" width="14" height="14"><span class="bookmarks-label">Bookmarks</span>
+      </button>
+      <button id="refresh" type="button" aria-label="Refresh" title="Refresh">↻</button>
+      <div id="auth-status" class="auth-status">
+        <button id="signin-open" type="button" class="auth-link">Sign in</button>
+        <span class="auth-signed-in" hidden>
+          <span id="auth-email"></span>
+          <button id="signout" type="button" class="auth-link">Sign out</button>
+        </span>
+      </div>
+    </div>
+  </header>
+  <div class="keyword-chips" aria-label="Quick searches"></div>
+  <main>
+    <section class="tier" data-tier="national">
+      <h2><img src="./national.png" alt="National" /></h2>
+      <div class="feed"></div>
+    </section>
+    <section class="tier" data-tier="nystate">
+      <h2><img src="./state.png" alt="New York State" /></h2>
+      <div class="feed"></div>
+    </section>
+    <section class="tier" data-tier="foreign">
+      <h2><img src="./foreignaffairs.png" alt="Foreign Affairs" /></h2>
+      <div class="feed"></div>
+    </section>
+  </main>
+  <div class="source-bar" aria-label="Filter by source">
+    <div class="source-bar-inner">
+      <div class="source-pills" id="source-pills"></div>
+    </div>
+  </div>
+  <div id="signin-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card" role="dialog" aria-labelledby="signin-title" aria-modal="true">
+      <h3 id="signin-title">Sign in</h3>
+      <p class="modal-desc">Enter your email. We'll send a one-time link that signs you in for 90 days.</p>
+      <form id="signin-form">
+        <input type="email" id="signin-email" required placeholder="you@example.com" autocomplete="email">
+        <div class="modal-actions">
+          <button type="button" class="modal-cancel" data-close>Cancel</button>
+          <button type="submit" id="signin-submit">Send link</button>
+        </div>
+      </form>
+      <p id="signin-message" class="modal-message" hidden></p>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="./auth.js"></script>
+  <script src="./bookmarks.js"></script>
+  <script src="./lite.js"></script>
+</body>
+</html>

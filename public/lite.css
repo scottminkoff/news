@@ -1,0 +1,70 @@
+/* Lite variant overrides. Loaded after styles.css, so these win.
+   Layout: three combined columns in a single row that scroll
+   independently, with a source-filter bar pinned along the bottom. */
+
+/* On wide screens, collapse the main page's 3x2 grid to a single row. */
+@media (min-width: 1101px) {
+  body.lite main {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Bottom source-filter bar: sits below the columns and stays put while
+   each column scrolls on its own. */
+.source-bar {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  padding: 0.75rem 2.5rem;
+}
+.source-bar-inner {
+  max-width: 1900px;
+  margin: 0 auto;
+  width: 100%;
+}
+.source-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.source-pills:empty::before {
+  content: "Loading sources…";
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+
+/* Larger, tappable pills tinted with each outlet's brand color so they
+   read the same as the source chips on the cards. */
+.source-pill {
+  padding: 0.5rem 1.05rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  font-family: inherit;
+  touch-action: manipulation;
+  transition: opacity 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.source-pill:hover { transform: translateY(-1px); }
+
+/* When a source is selected, dim the rest and ring the active one. */
+.source-bar.filtering .source-pill:not(.active) { opacity: 0.32; }
+.source-pill.active {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text);
+}
+
+@media (max-width: 1100px) {
+  body.lite main {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+  .source-bar { padding: 0.75rem 1.25rem; }
+}
+
+@media (max-width: 700px) {
+  .source-bar { padding: 0.65rem 0.85rem; }
+  .source-pill { padding: 0.45rem 0.9rem; font-size: 0.85rem; }
+}
