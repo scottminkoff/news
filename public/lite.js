@@ -257,16 +257,18 @@ function renderCard(item) {
   const pubAttr = item.pubDate ? ` data-pub="${escapeAttr(item.pubDate)}"` : '';
 
   a.innerHTML = `
-    <div class="card-body">
-      <h3>${escapeHtml(item.title)}</h3>
-      ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
-      <div class="card-meta">
-        <span class="card-sources">
-          <span class="source"${sourceStyleAttr(item.source)}>${escapeHtml(item.source)}</span>
-        </span>
-        <span class="card-time"${pubAttr}>${ago}</span>
+    <div class="card-head"${sourceStyleAttr(item.source)}>${escapeHtml(item.source)}</div>
+    <div class="card-main">
+      <div class="card-body">
+        <h3>${escapeHtml(item.title)}</h3>
+        ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
+        <div class="card-meta">
+          <span class="card-time"${pubAttr}>${ago}</span>
+        </div>
       </div>
     </div>`;
+
+  const main = a.querySelector('.card-main');
 
   if (safeImage) {
     const img = document.createElement('img');
@@ -279,7 +281,7 @@ function renderCard(item) {
       img.remove();
       a.classList.add('no-image');
     });
-    a.prepend(img);
+    main.prepend(img);
   }
 
   const bm = document.createElement('button');
@@ -297,7 +299,7 @@ function renderCard(item) {
     }
     window.Bookmarks.toggle(item);
   });
-  a.appendChild(bm);
+  main.appendChild(bm);
 
   return a;
 }
