@@ -74,6 +74,15 @@ body.lite .card-meta {
   padding-top: 0.55rem;
 }
 
+/* "All" view: collapse the three columns into one centered combined feed. */
+body.lite .tier[data-tier="all"] { display: none; }
+body.lite.view-all main > .tier:not([data-tier="all"]) { display: none; }
+body.lite.view-all .tier[data-tier="all"] { display: flex; }
+body.lite.view-all main {
+  grid-template-columns: minmax(0, 620px);
+  justify-content: center;
+}
+
 /* Bottom source-filter bar: sits below the columns and stays put while
    each column scrolls on its own. */
 .source-bar {
