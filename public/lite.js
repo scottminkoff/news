@@ -420,9 +420,9 @@ function safeUrl(url, allowedProtocols) {
 
 function sourceStyleAttr(name) {
   if (!name) return '';
-  const bg = brandColor(name);
-  const text = SOURCE_COLORS[name]?.text || pickTextColor(bg);
-  return ` style="background:${bg};color:${text}"`;
+  const bg = brandColor(name, HEAD_LIGHTEN);
+  // Auto-pick black/white text so the softened banner stays legible.
+  return ` style="background:${bg};color:${pickTextColor(bg)}"`;
 }
 
 // Source pills carry the brand color only as a small dot (see .source-pill
@@ -432,12 +432,13 @@ function pillColorVar(name) {
   return ` style="--pill-color:${brandColor(name)}"`;
 }
 
-// How much to lighten each publication's brand color (toward white) so the
-// banners and dots read a touch softer.
-const BRAND_LIGHTEN = 0.15;
+// Lighten each publication's brand color toward white so it reads softer.
+// The card-header banners are muted more than the small pill dots.
+const BRAND_LIGHTEN = 0.15;  // pill dots
+const HEAD_LIGHTEN = 0.30;   // card-header banners
 
-function brandColor(name) {
-  return lightenHex(SOURCE_COLORS[name]?.bg || hashSourceColor(name), BRAND_LIGHTEN);
+function brandColor(name, amt = BRAND_LIGHTEN) {
+  return lightenHex(SOURCE_COLORS[name]?.bg || hashSourceColor(name), amt);
 }
 
 function lightenHex(hex, amt) {
