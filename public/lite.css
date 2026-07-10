@@ -109,6 +109,13 @@ body.lite.view-all main {
   grid-template-columns: minmax(0, 620px);
   justify-content: center;
 }
+/* The wide header image is height-capped in the columns; in the roomier All
+   column let it stretch to the full column width instead of leaving a gap. */
+body.lite.view-all .tier[data-tier="all"] h2 img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
 
 /* Bottom source-filter bar: sits below the columns and stays put while
    each column scrolls on its own. */
