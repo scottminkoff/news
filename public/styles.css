@@ -166,9 +166,9 @@ main {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 2rem 2.5rem;
-  padding: 2rem 2.5rem;
-  max-width: 1900px;
+  gap: 1.5rem 2rem;
+  padding: 1.75rem 2rem;
+  max-width: 1320px;
   margin: 0 auto;
   width: 100%;
   flex: 1;
@@ -648,3 +648,22 @@ body.all-only main > .tier[data-tier="all"] {
   z-index: 1000;
 }
 .toast[hidden] { display: none; }
+
+/* Laptop/desktop: a lighter, less dense grid so six feeds don't feel
+   overwhelming. Scoped above the mobile breakpoint so phone cards are
+   unchanged. Placed last so it overrides the base card component. */
+@media (min-width: 1101px) {
+  .tier h2 { margin-bottom: 1rem; }
+  .tier h2 img { max-height: 30px; }
+
+  .feed { gap: 0.85rem; }
+
+  .card {
+    grid-template-columns: 80px 1fr;
+    gap: 0.85rem;
+    padding: 0.85rem;
+  }
+  .card .thumb { width: 80px; height: 80px; }
+  .card-body h3 { font-size: 0.94rem; padding-right: 2.25rem; }
+  .card-body p { font-size: 0.82rem; }
+}
