@@ -654,10 +654,26 @@ body.all-only main > .tier[data-tier="all"] {
    overwhelming. Scoped above the mobile breakpoint so phone cards are
    unchanged. Placed last so it overrides the base card component. */
 @media (min-width: 1101px) {
+  /* Branded ribbon graphic anchored to the bottom of the viewport,
+     full width, held fixed behind the scrolling feed columns. */
+  body {
+    background-image: url("./proximatenews_background.png");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 100% auto;
+    background-attachment: fixed;
+  }
+
   .tier h2 { margin-bottom: 1rem; }
   .tier h2 img { max-height: 30px; }
 
   .feed { gap: 0.85rem; }
+
+  /* let the ribbon footer show through the bottom quick-search bar */
+  .keyword-chips {
+    background: transparent;
+    border-top: none;
+  }
 
   .card {
     grid-template-columns: 80px 1fr;
