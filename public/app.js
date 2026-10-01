@@ -449,9 +449,11 @@ function renderCard(item) {
     ip.setAttribute('aria-label', 'Save to Instapaper');
     ip.title = 'Save to Instapaper';
     ip.innerHTML =
-      '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
-      '<circle cx="11" cy="5.2" r="2" fill="currentColor"/>' +
-      '<path d="M11 9.4v6.2c0 2.3-1.6 3.6-3.9 3.6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>' +
+      '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" ' +
+      'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
+      '<line x1="7.5" y1="6" x2="16.5" y2="6"/>' +
+      '<line x1="12" y1="6" x2="12" y2="18"/>' +
+      '<line x1="7.5" y1="18" x2="16.5" y2="18"/>' +
       '</svg>';
     ip.addEventListener('click', e => {
       e.preventDefault();
