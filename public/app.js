@@ -442,6 +442,27 @@ function renderCard(item) {
   });
   a.appendChild(bm);
 
+  if (safeLink) {
+    const ip = document.createElement('button');
+    ip.type = 'button';
+    ip.className = 'instapaper-btn';
+    ip.setAttribute('aria-label', 'Save to Instapaper');
+    ip.title = 'Save to Instapaper';
+    ip.innerHTML =
+      '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">' +
+      '<circle cx="11" cy="5.2" r="2" fill="currentColor"/>' +
+      '<path d="M11 9.4v6.2c0 2.3-1.6 3.6-3.9 3.6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>' +
+      '</svg>';
+    ip.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const url = 'https://www.instapaper.com/edit?url=' + encodeURIComponent(safeLink) +
+        '&title=' + encodeURIComponent(item.title || '');
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+    a.appendChild(ip);
+  }
+
   return a;
 }
 
