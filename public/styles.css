@@ -414,7 +414,7 @@ body.all-only main > .tier[data-tier="all"] {
 
 .card-body h3 {
   margin: 0 0 0.4rem;
-  padding-right: 2.5rem;
+  padding-right: 4.3rem;
   font-size: 1rem;
   line-height: 1.35;
   font-weight: 600;
@@ -581,6 +581,33 @@ body.all-only main > .tier[data-tier="all"] {
   height: 18px;
 }
 
+/* Save-to-Instapaper button, sits just left of the bookmark button */
+.instapaper-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: calc(0.45rem + 34px);
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.55;
+  color: var(--text-dim);
+  transition: opacity 0.15s, transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
+}
+.card:hover .instapaper-btn { opacity: 1; }
+.instapaper-btn:hover {
+  transform: scale(1.08);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.instapaper-btn svg { display: block; pointer-events: none; }
+
 /* sign-in modal */
 .modal {
   position: fixed;
@@ -681,6 +708,6 @@ body.all-only main > .tier[data-tier="all"] {
     padding: 0.85rem;
   }
   .card .thumb { width: 80px; height: 80px; }
-  .card-body h3 { font-size: 0.94rem; padding-right: 2.25rem; }
+  .card-body h3 { font-size: 0.94rem; padding-right: 4rem; }
   .card-body p { font-size: 0.82rem; }
 }
