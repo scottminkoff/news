@@ -40,7 +40,7 @@ export const FEEDS = {
     { id: 'bulwark_triad',  name: 'Jonathan V. Last',    url: 'https://www.thebulwark.com/feed', include: 'The Triad' },
   ],
   israel: [
-    { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/israel-and-the-region/feed/' },
+    { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/feed/' },
     { id: 'forward',      name: 'The Forward',           url: 'https://forward.com/feed/' },
   ],
   foreign: [
