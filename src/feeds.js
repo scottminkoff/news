@@ -3,6 +3,9 @@
 // Optional `include` field: case-insensitive substring; only items whose
 // title, description, or content body contains it are kept (used to
 // subset a firehose feed down to a particular column or topic).
+// Optional `exclude` field: a string or array of case-insensitive
+// substrings; any item whose title, description, or content body contains
+// one is dropped (applied after `include`).
 
 export const FEEDS = {
   national: [
@@ -45,6 +48,7 @@ export const FEEDS = {
     // sources (Times Union, Daily Freeman, Mid Hudson News).
     { id: 'toi',          name: 'Times of Israel',       url: 'https://news.google.com/rss/search?q=site%3Atimesofisrael.com&hl=en-US&gl=US&ceid=US%3Aen' },
     { id: 'forward',      name: 'The Forward',           url: 'https://forward.com/feed/' },
+    { id: 'tablet',       name: 'Tablet',                url: 'https://rss.app/feeds/5wdCIoYsPG53oDI7.xml', exclude: ['Bekhorot', 'Print Issue'] },
   ],
   foreign: [
     { id: 'nyt_world',    name: 'NYT World',             url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
