@@ -40,7 +40,10 @@ export const FEEDS = {
     { id: 'bulwark_triad',  name: 'Jonathan V. Last',    url: 'https://www.thebulwark.com/feed', include: 'The Triad' },
   ],
   israel: [
-    { id: 'toi',          name: 'Times of Israel',       url: 'https://www.timesofisrael.com/feed/' },
+    // Times of Israel returns HTTP 403 to the build runner (datacenter IP
+    // bot-blocking), so pull it via Google News RSS like our other blocked
+    // sources (Times Union, Daily Freeman, Mid Hudson News).
+    { id: 'toi',          name: 'Times of Israel',       url: 'https://news.google.com/rss/search?q=site%3Atimesofisrael.com&hl=en-US&gl=US&ceid=US%3Aen' },
     { id: 'forward',      name: 'The Forward',           url: 'https://forward.com/feed/' },
   ],
   foreign: [
