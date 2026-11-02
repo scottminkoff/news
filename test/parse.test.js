@@ -184,6 +184,21 @@ test('Title trailing " - <source>" suffix is stripped (Google News bridge)', () 
   assert.equal(items[0].title, 'Big story breaks today');
 });
 
+test('Title suffix matching the Google News <source> is stripped even when it differs from feed.name', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Ceasefire talks resume in the region - The Times of Israel</title>
+          <link>https://news.google.com/articles/xyz</link>
+          <source url="https://www.timesofisrael.com">The Times of Israel</source>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'toi', name: 'Times of Israel' });
+  assert.equal(items[0].title, 'Ceasefire talks resume in the region');
+});
+
 test('Google News-style description with escaped HTML is cleaned, not shown raw', () => {
   const xml = `<?xml version="1.0"?>
     <rss version="2.0">

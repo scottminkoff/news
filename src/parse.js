@@ -72,7 +72,13 @@ export function normalize(item, feed) {
     if (!isNaN(d.getTime())) pubDate = d.toISOString();
   }
   const rawDesc = item.description ?? item.summary ?? item['content:encoded'] ?? '';
-  const cleanTitle = stripReplyPrefixes(stripSourceSuffix(cleanText(title), feed.name));
+  // Google News bridges title as "Headline - <Publisher>"; the publisher
+  // text lives in the item's <source> element (often fuller than feed.name,
+  // e.g. "The Times of Israel" vs "Times of Israel"), so strip against both.
+  const gnewsSource = cleanText(textOf(item.source));
+  const cleanTitle = stripReplyPrefixes(
+    stripSourceSuffix(cleanText(title), feed.name, gnewsSource),
+  );
   let description = stripHtml(textOf(rawDesc));
   if (isRedundantDescription(description, cleanTitle, feed.name)) description = '';
   description = description.slice(0, 280);
@@ -132,9 +138,13 @@ function cleanText(s) {
   return decodeEntities(String(s)).replace(/\s+/g, ' ').trim();
 }
 
-function stripSourceSuffix(title, sourceName) {
-  const suffix = ` - ${sourceName}`;
-  return title.endsWith(suffix) ? title.slice(0, -suffix.length).trimEnd() : title;
+function stripSourceSuffix(title, ...sourceNames) {
+  for (const name of sourceNames) {
+    if (!name) continue;
+    const suffix = ` - ${name}`;
+    if (title.endsWith(suffix)) return title.slice(0, -suffix.length).trimEnd();
+  }
+  return title;
 }
 
 function stripReplyPrefixes(title) {
