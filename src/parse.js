@@ -38,14 +38,23 @@ export function parseFeed(xml, feed) {
   const rawItems = channel?.item ?? atom?.entry ?? [];
   const arr = Array.isArray(rawItems) ? rawItems : [rawItems];
   const needle = feed.include ? feed.include.toLowerCase() : null;
+  const excludeNeedles = toNeedles(feed.exclude);
   return arr
-    .filter(item => !needle || matchesInclude(item, needle))
+    .filter(item => !needle || matchesAnyNeedle(item, [needle]))
+    .filter(item => !excludeNeedles.length || !matchesAnyNeedle(item, excludeNeedles))
     .map(item => normalize(item, feed))
     .filter(i => i.title && i.link)
     .filter(i => !isJunkTitle(i.title));
 }
 
-function matchesInclude(item, needle) {
+function toNeedles(val) {
+  if (!val) return [];
+  return (Array.isArray(val) ? val : [val])
+    .map(s => String(s).toLowerCase())
+    .filter(Boolean);
+}
+
+function matchesAnyNeedle(item, needles) {
   const fields = [
     textOf(item.title),
     textOf(item.description),
@@ -53,7 +62,7 @@ function matchesInclude(item, needle) {
     textOf(item['content:encoded']),
     textOf(item.content),
   ];
-  return fields.some(f => f && f.toLowerCase().includes(needle));
+  return needles.some(n => fields.some(f => f && f.toLowerCase().includes(n)));
 }
 
 function isJunkTitle(title) {

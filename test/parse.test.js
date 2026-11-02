@@ -199,6 +199,43 @@ test('Title suffix matching the Google News <source> is stripped even when it di
   assert.equal(items[0].title, 'Ceasefire talks resume in the region');
 });
 
+test('exclude drops items containing any excluded term (title or description), keeps the rest', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item>
+          <title>Daf Yomi: Bekhorot 42 and the firstborn</title>
+          <link>https://example.com/1</link>
+        </item>
+        <item>
+          <title>Our latest essays</title>
+          <link>https://example.com/2</link>
+          <description>Read the full Print Issue here.</description>
+        </item>
+        <item>
+          <title>A clean feature story</title>
+          <link>https://example.com/3</link>
+        </item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'tablet', name: 'Tablet', exclude: ['Bekhorot', 'Print Issue'] });
+  assert.equal(items.length, 1);
+  assert.equal(items[0].title, 'A clean feature story');
+});
+
+test('exclude is case-insensitive and also accepts a single string', () => {
+  const xml = `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <item><title>BEKHOROT review</title><link>https://example.com/a</link></item>
+        <item><title>Something else</title><link>https://example.com/b</link></item>
+      </channel>
+    </rss>`;
+  const items = parseFeed(xml, { id: 'tablet', name: 'Tablet', exclude: 'bekhorot' });
+  assert.equal(items.length, 1);
+  assert.equal(items[0].title, 'Something else');
+});
+
 test('Google News-style description with escaped HTML is cleaned, not shown raw', () => {
   const xml = `<?xml version="1.0"?>
     <rss version="2.0">

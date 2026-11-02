@@ -16,6 +16,7 @@ const SOURCE_COLORS = {
   'Daily Freeman':        { bg: '#fafafa', text: '#000000' },
   'Times of Israel':      { bg: '#0e4f97', text: '#FFFFFF' },
   'The Forward':          { bg: '#da9e0a', text: '#FFFFFF' },
+  'Tablet':               { bg: '#111111', text: '#FFFFFF' },
   'NYT World':            { bg: '#544F4F', text: '#FFFFFF' },
   'WSJ World':            { bg: '#FFE6BD', text: '#000000' },
   'Jonah Goldberg':       { bg: '#f4efeb', text: '#d1221f' },
