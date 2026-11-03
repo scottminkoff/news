@@ -25,6 +25,7 @@ const SOURCE_COLORS = {
   'David French':         { bg: '#544F4F', text: '#FFFFFF' },
   'NYT Sunday Opinion':   { bg: '#544F4F', text: '#FFFFFF' },
   'The Browser':          { bg: '#FFF1DB', text: '#6B4B07' },
+  'Strength in Numbers':  { bg: '#121D64', text: '#FFFFFF' },
   'Jonathan V. Last':     { bg: '#000000', text: '#d0021b' },
 };
 

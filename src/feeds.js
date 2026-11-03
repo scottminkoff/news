@@ -15,6 +15,7 @@ export const FEEDS = {
     { id: 'atlantic_politics', name: 'The Atlantic', url: 'https://www.theatlantic.com/feed/channel/politics/' },
     { id: 'tpm',          name: 'TPM',          url: 'https://talkingpointsmemo.com/news/atom/3d6ab582-e5e8-45ac-9040-d7bc43abf7bd' },
     { id: 'newyorker',    name: 'New Yorker',   url: 'https://www.newyorker.com/feed/everything' },
+    { id: 'sinumbers',    name: 'Strength in Numbers', url: 'https://www.gelliottmorris.com/feed' },
   ],
   state: [
     { id: 'tu_state',     name: 'Times Union',           url: 'https://news.google.com/rss/search?q=site%3Atimesunion.com+%28%28%22New+York%22+%28Assembly+OR+%22State+Senate%22+OR+Legislature+OR+Governor+OR+%22New+York+Government%22%29%29+OR+Churchill+OR+%22Pat+Ryan%22%29&hl=en-US&gl=US&ceid=US%3Aen' },
