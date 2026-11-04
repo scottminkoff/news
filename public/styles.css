@@ -703,6 +703,8 @@ body.all-only main > .tier[data-tier="all"] {
 @media (min-width: 1101px) {
   html, body { height: auto; }
   body { min-height: 100%; }
+  /* keep the menu bar pinned while the page scrolls */
+  header { position: sticky; top: 0; }
   main {
     grid-template-rows: auto;
     overflow: visible;
