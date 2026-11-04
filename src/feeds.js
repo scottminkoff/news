@@ -41,7 +41,7 @@ export const FEEDS = {
     { id: 'nyt_sunday',   name: 'NYT Sunday Opinion',    url: 'https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml' },
     { id: 'browser',      name: 'The Browser',           url: 'https://kill-the-newsletter.com/feeds/blszn8836cs0kblerzr3.xml' },
     { id: 'atlantic_ideas', name: 'The Atlantic',        url: 'https://www.theatlantic.com/feed/channel/ideas/' },
-    { id: 'bulwark_triad',  name: 'Jonathan V. Last',    url: 'https://www.thebulwark.com/feed', include: 'The Triad' },
+    { id: 'bulwark_triad',  name: 'Jonathan V. Last',    url: 'https://rss.app/feeds/FVgE7ntsI7z5ctNy.xml' },
   ],
   israel: [
     // Times of Israel returns HTTP 403 to the build runner (datacenter IP
