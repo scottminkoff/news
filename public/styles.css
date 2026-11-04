@@ -711,3 +711,25 @@ body.all-only main > .tier[data-tier="all"] {
   .card-body h3 { font-size: 0.94rem; padding-right: 4rem; }
   .card-body p { font-size: 0.82rem; }
 }
+
+/* Each section shows ~3-4 cards then scrolls within itself; the whole
+   page is allowed to run a bit past one screen so the panels aren't
+   cramped. Equal panel heights keep the two rows aligned (no mid-page
+   gaps). */
+@media (min-width: 1101px) {
+  html, body { height: auto; }
+  body { min-height: 100%; }
+  main {
+    grid-template-rows: auto;
+    overflow: visible;
+    flex: none;
+  }
+  .feed {
+    flex: none;
+    height: 40rem;
+    overflow-y: auto;
+  }
+  /* the single-column All / Bookmarks views just scroll the page */
+  body.all-only .feed,
+  body.bookmarks-only .feed { height: auto; }
+}
